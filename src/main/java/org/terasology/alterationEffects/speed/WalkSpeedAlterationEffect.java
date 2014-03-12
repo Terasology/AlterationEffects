@@ -18,7 +18,8 @@ package org.terasology.alterationEffects.speed;
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.delay.AddDelayedActionEvent;
+import org.terasology.logic.delay.DelayManager;
+import org.terasology.registry.CoreRegistry;
 
 public class WalkSpeedAlterationEffect implements AlterationEffect {
     @Override
@@ -37,6 +38,6 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
             entity.saveComponent(walkSpeed);
         }
 
-        entity.send(new AddDelayedActionEvent(AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration));
+        CoreRegistry.get(DelayManager.class).addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
     }
 }
