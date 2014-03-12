@@ -1,0 +1,13 @@
+{
+    "id" : "AlterationEffects",
+    "version" : "0.1.0",
+    "author" : "",
+    "displayName" : "AlterationEffects",
+    "description" : "",
+    "dependencies" : [
+            {
+                "id" : "Core",
+                "minVersion" : "0.1.0"
+            }],
+    "isServerSideOnly" : false
+}
