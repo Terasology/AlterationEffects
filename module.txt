@@ -1,6 +1,6 @@
 {
     "id" : "AlterationEffects",
-    "version" : "0.1.1-SNAPSHOT",
+    "version" : "0.2.0-SNAPSHOT",
     "author" : "Marcin Sciesinski <marcins78@gmail.com>",
     "displayName" : "AlterationEffects",
     "description" : "Allows for applying modifying effects to a player (or something else) that alters their base state in some fashion.",
