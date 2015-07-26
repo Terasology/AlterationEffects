@@ -17,11 +17,18 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
-import org.terasology.registry.CoreRegistry;
 
 public class SwimSpeedAlterationEffect implements AlterationEffect {
+
+    private final DelayManager delayManager;
+
+    public SwimSpeedAlterationEffect(Context context) {
+        this.delayManager = context.get(DelayManager.class);
+    }
+
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -38,6 +45,6 @@ public class SwimSpeedAlterationEffect implements AlterationEffect {
             entity.saveComponent(swimSpeed);
         }
 
-        CoreRegistry.get(DelayManager.class).addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.SWIM_SPEED, duration);
+        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.SWIM_SPEED, duration);
     }
 }

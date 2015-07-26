@@ -17,27 +17,36 @@ package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
-import org.terasology.registry.CoreRegistry;
 
 public class RegenerationAlterationEffect implements AlterationEffect {
+
+    private final Time time;
+    private final DelayManager delayManager;
+
+    public RegenerationAlterationEffect(Context context) {
+        this.time = context.get(Time.class);
+        this.delayManager = context.get(DelayManager.class);
+    }
+
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
         if (regeneration == null) {
             regeneration = new RegenerationComponent();
             regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
-            regeneration.lastRegenerationTime = CoreRegistry.get(Time.class).getGameTimeInMs();
+            regeneration.lastRegenerationTime = time.getGameTimeInMs();
             entity.addComponent(regeneration);
         } else {
             regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
-            regeneration.lastRegenerationTime = CoreRegistry.get(Time.class).getGameTimeInMs();
+            regeneration.lastRegenerationTime = time.getGameTimeInMs();
             entity.addComponent(regeneration);
         }
 
-        CoreRegistry.get(DelayManager.class).addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
+        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
     }
 }
