@@ -17,6 +17,7 @@ package org.terasology.alterationEffects;
 
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
 import org.terasology.alterationEffects.regenerate.RegenerationComponent;
+import org.terasology.alterationEffects.speed.JumpSpeedComponent;
 import org.terasology.alterationEffects.speed.SwimSpeedComponent;
 import org.terasology.alterationEffects.speed.WalkSpeedComponent;
 import org.terasology.entitySystem.Component;
@@ -37,6 +38,7 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
     public void initialise() {
         effectComponents.put(AlterationEffects.WALK_SPEED, WalkSpeedComponent.class);
         effectComponents.put(AlterationEffects.SWIM_SPEED, SwimSpeedComponent.class);
+        effectComponents.put(AlterationEffects.JUMP_SPEED, JumpSpeedComponent.class);
         effectComponents.put(AlterationEffects.WATER_BREATHING, WaterBreathingComponent.class);
         effectComponents.put(AlterationEffects.REGENERATION, RegenerationComponent.class);
     }

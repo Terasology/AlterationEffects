@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 MovingBlocks
+ * Copyright 2016 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.alterationEffects;
+package org.terasology.alterationEffects.speed;
+import org.terasology.entitySystem.Component;
 
-public final class AlterationEffects {
-    public static final String EXPIRE_TRIGGER_PREFIX = "AlterationEffects:Expire:";
+import org.terasology.entitySystem.Component;
 
-    public static final String WALK_SPEED = "WalkSpeed";
-    public static final String SWIM_SPEED = "SwimSpeed";
-    public static final String JUMP_SPEED = "JumpSpeed";
-    public static final String WATER_BREATHING = "WaterBreathing";
-    public static final String REGENERATION = "Regeneration";
-
-    private AlterationEffects() {
-    }
+public class JumpSpeedComponent implements Component {
+    public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+    public float multiplier;
 }
+
