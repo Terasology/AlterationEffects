@@ -23,6 +23,7 @@ public final class AlterationEffects {
     public static final String JUMP_SPEED = "JumpSpeed";
     public static final String WATER_BREATHING = "WaterBreathing";
     public static final String REGENERATION = "Regeneration";
+    public static final String MULTI_JUMP = "MultiJump";
 
     private AlterationEffects() {
     }
