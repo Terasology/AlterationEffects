@@ -18,6 +18,7 @@ package org.terasology.alterationEffects.boost;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeRemoveComponent;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
@@ -42,7 +43,7 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     private EntityManager entityManager;
 
     @ReceiveEvent
-    public void removeHealthBoost(BeforeRemoveComponent event, EntityRef entity, HealthBoostComponent hBoost) {
+    public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);
         h.maxHealth = Math.round(h.maxHealth / (1f + hBoost.boostAmount));
     }
