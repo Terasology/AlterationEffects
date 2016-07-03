@@ -24,6 +24,9 @@ public final class AlterationEffects {
     public static final String WATER_BREATHING = "WaterBreathing";
     public static final String REGENERATION = "Regeneration";
     public static final String MULTI_JUMP = "MultiJump";
+    public static final String DAMAGE_OVER_TIME = "DamageOverTime";
+
+    public static final String MAX_HEALTH_BOOST = "MaxHealthBoost";
 
     private AlterationEffects() {
     }
