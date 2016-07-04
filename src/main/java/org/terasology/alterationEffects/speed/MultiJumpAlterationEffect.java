@@ -50,4 +50,9 @@ public class MultiJumpAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity,
                 AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MULTI_JUMP, duration);
     }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
+        applyEffect(instigator, entity, magnitude, duration);
+    }
 }

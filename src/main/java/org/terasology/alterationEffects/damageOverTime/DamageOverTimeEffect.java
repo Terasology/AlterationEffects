@@ -16,14 +16,11 @@
 package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.reflection.MappedContainer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class DamageOverTimeComponent implements Component {
+@MappedContainer
+public class DamageOverTimeEffect {
     public int damageAmount;
     public long lastDamageTime;
-    public String source;
-    public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();
+    public String damageType;
 }

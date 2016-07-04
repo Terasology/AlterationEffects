@@ -42,4 +42,9 @@ public class CureDamageOverTimeAlterationEffect implements AlterationEffect {
 
         delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME);
     }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
+        applyEffect(instigator, entity, magnitude, duration);
+    }
 }

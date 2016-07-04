@@ -19,4 +19,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 
 public interface AlterationEffect {
     void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration);
+
+    void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration);
 }

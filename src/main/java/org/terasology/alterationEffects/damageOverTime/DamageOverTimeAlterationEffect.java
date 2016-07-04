@@ -35,6 +35,10 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
+        applyEffect(instigator, entity, "Default", magnitude, duration);
+    }
+
+    public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
         if (dot == null) {
             dot = new DamageOverTimeComponent();
@@ -47,6 +51,19 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
             entity.addComponent(dot);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME, duration);
+        DamageOverTimeEffect dotEffect = new DamageOverTimeEffect();
+        dotEffect.damageAmount = TeraMath.floorToInt(magnitude);
+        dotEffect.lastDamageTime = time.getGameTimeInMs();
+        dotEffect.damageType = "AlterationEffects:damageOverTimeDamage";
+
+        if (dot.dots.get(id) == null) {
+            dot.dots.put(id, dotEffect);
+        } else {
+            dot.dots.replace(id, dotEffect);
+        }
+
+        entity.saveComponent(dot);
+
+        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
     }
 }

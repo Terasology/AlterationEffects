@@ -45,7 +45,6 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         effectComponents.put(AlterationEffects.WATER_BREATHING, WaterBreathingComponent.class);
         effectComponents.put(AlterationEffects.REGENERATION, RegenerationComponent.class);
         effectComponents.put(AlterationEffects.MULTI_JUMP, MultiJumpComponent.class);
-        effectComponents.put(AlterationEffects.DAMAGE_OVER_TIME, DamageOverTimeComponent.class);
         effectComponents.put(AlterationEffects.MAX_HEALTH_BOOST, HealthBoostComponent.class);
     }
 
@@ -60,4 +59,5 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
             }
         }
     }
+
 }

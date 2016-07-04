@@ -15,13 +15,17 @@
  */
 package org.terasology.alterationEffects.damageOverTime;
 
+import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.engine.Time;
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
+import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.logic.health.DoDamageEvent;
 import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.health.HealthComponent;
@@ -40,12 +44,35 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
     @In
     private EntityManager entityManager;
 
+    @ReceiveEvent
+    public void expireDOTEffect(DelayedActionTriggeredEvent event, EntityRef entity, DamageOverTimeComponent component) {
+        final String actionId = event.getActionId();
+        if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
+            String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            String[] split = actionId.split(":");
+
+            if (split.length != 4) {
+                return;
+            }
+
+            if (split[2].equalsIgnoreCase(AlterationEffects.DAMAGE_OVER_TIME)) {
+                component.dots.remove(split[3]);
+
+                if (component.dots.size() == 0 && component != null) {
+                    entity.removeComponent(DamageOverTimeComponent.class);
+                }
+            }
+        }
+    }
+
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();
         if (currentTime >= lastUpdated + CHECK_INTERVAL) {
             lastUpdated = currentTime;
 
+
+            /*
             for (EntityRef entity : entityManager.getEntitiesWith(DamageOverTimeComponent.class, HealthComponent.class)) {
                 final DamageOverTimeComponent component = entity.getComponent(DamageOverTimeComponent.class);
                 if (currentTime >= component.lastDamageTime + DAMAGE_TICK) {
@@ -54,6 +81,21 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
                     entity.saveComponent(component);
                     entity.send(new DoDamageEvent(component.damageAmount * multiplier,
                             Assets.getPrefab("AlterationEffects:damageOverTimeDamage").get()));
+                }
+            }
+            */
+
+            for (EntityRef entity : entityManager.getEntitiesWith(DamageOverTimeComponent.class, HealthComponent.class)) {
+                final DamageOverTimeComponent component = entity.getComponent(DamageOverTimeComponent.class);
+
+                for (DamageOverTimeEffect dotEffect : component.dots.values()) {
+                    if (currentTime >= dotEffect.lastDamageTime + DAMAGE_TICK) {
+                        int multiplier = (int) (currentTime - dotEffect.lastDamageTime) / DAMAGE_TICK;
+                        dotEffect.lastDamageTime = dotEffect.lastDamageTime + DAMAGE_TICK * multiplier;
+                        entity.saveComponent(component);
+                        entity.send(new DoDamageEvent(dotEffect.damageAmount * multiplier,
+                                Assets.getPrefab(dotEffect.damageType).get()));
+                    }
                 }
             }
         }
