@@ -19,6 +19,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.characters.AffectItemUseCooldownTimeEvent;
 import org.terasology.logic.characters.AffectJumpForceEvent;
 import org.terasology.logic.characters.AffectMultiJumpEvent;
 import org.terasology.logic.characters.GetMaxSpeedEvent;
@@ -46,6 +47,13 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     public void modifyMultiJump(AffectMultiJumpEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(MultiJumpComponent.class)) {
             event.multiply(entityRef.getComponent(MultiJumpComponent.class).multiplier);
+        }
+    }
+
+    @ReceiveEvent
+    public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {
+        if (entityRef.hasComponent(ItemUseSpeedComponent.class)) {
+            event.multiply(entityRef.getComponent(ItemUseSpeedComponent.class).multiplier);
         }
     }
 }

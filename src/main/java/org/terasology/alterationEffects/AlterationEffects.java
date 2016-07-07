@@ -21,6 +21,7 @@ public final class AlterationEffects {
     public static final String WALK_SPEED = "WalkSpeed";
     public static final String SWIM_SPEED = "SwimSpeed";
     public static final String JUMP_SPEED = "JumpSpeed";
+    public static final String ITEM_USE_SPEED = "ItemUseSpeed";
     public static final String WATER_BREATHING = "WaterBreathing";
     public static final String REGENERATION = "Regeneration";
     public static final String MULTI_JUMP = "MultiJump";
