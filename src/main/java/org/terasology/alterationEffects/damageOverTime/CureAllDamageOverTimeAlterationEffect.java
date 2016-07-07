@@ -21,37 +21,29 @@ import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
+import org.terasology.math.TeraMath;
 
-public class CureDamageOverTimeAlterationEffect implements AlterationEffect {
+public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
-    public CureDamageOverTimeAlterationEffect(Context context) {
+    public CureAllDamageOverTimeAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
-        applyEffect(instigator, entity, "Default", magnitude, duration);
+        DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
+        if (dot != null) {
+            entity.removeComponent(DamageOverTimeComponent.class);
+            delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME);
+        }
     }
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
-        DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
-        if (dot == null) {
-            return;
-        }
-
-        if (dot.dots.get(id) != null) {
-            dot.dots.remove(id);
-            delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX +
-                    AlterationEffects.DAMAGE_OVER_TIME + ":" + id);
-
-            if (dot.dots.isEmpty()) {
-                entity.removeComponent(DamageOverTimeComponent.class);
-            }
-        }
+        applyEffect(instigator, entity, magnitude, duration);
     }
 }
