@@ -45,6 +45,10 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);
-        h.maxHealth = Math.round(h.maxHealth / (1f + hBoost.boostAmount));
+        h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f*hBoost.boostAmount));
+
+        if (h.currentHealth > h.maxHealth) {
+            h.currentHealth = h.maxHealth;
+        }
     }
 }

@@ -36,26 +36,27 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
-        HealthBoostComponent dot = entity.getComponent(HealthBoostComponent.class);
-        if (dot == null) {
-            dot = new HealthBoostComponent();
-            dot.boostAmount = TeraMath.floorToInt(magnitude);
-            dot.lastDamageTime = time.getGameTimeInMs();
+        HealthBoostComponent hbot = entity.getComponent(HealthBoostComponent.class);
+        if (hbot == null) {
+            hbot = new HealthBoostComponent();
+            hbot.boostAmount = TeraMath.floorToInt(magnitude);
+            hbot.lastUseTime = time.getGameTimeInMs();
 
             HealthComponent h = entity.getComponent(HealthComponent.class);
-            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*dot.boostAmount));
+            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*hbot.boostAmount));
 
-            entity.addComponent(dot);
+            entity.addComponent(hbot);
         } else {
             HealthComponent h = entity.getComponent(HealthComponent.class);
-            h.maxHealth = Math.round(h.maxHealth / (1 + 0.01f*dot.boostAmount));
 
-            dot.boostAmount = TeraMath.floorToInt(magnitude);
-            dot.lastDamageTime = time.getGameTimeInMs();
+            delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST);
+            entity.removeComponent(HealthBoostComponent.class);
 
-            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*dot.boostAmount));
+            hbot.boostAmount = TeraMath.floorToInt(magnitude);
+            hbot.lastUseTime = time.getGameTimeInMs();
+            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*hbot.boostAmount));
 
-            entity.addComponent(dot);
+            entity.addComponent(hbot);
         }
 
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);

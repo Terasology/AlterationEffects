@@ -19,7 +19,7 @@ import org.terasology.entitySystem.Component;
 
 public class HealthBoostComponent implements Component {
     public int boostAmount;
-    public long lastDamageTime;
+    public long lastUseTime;
     public int oldBaseMax;
     public int newBaseMax;
     public String source;
