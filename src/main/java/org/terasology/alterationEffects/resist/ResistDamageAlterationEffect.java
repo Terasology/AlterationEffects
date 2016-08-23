@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.alterationEffects.damageOverTime;
+package org.terasology.alterationEffects.resist;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
+import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
 
-public class DamageOverTimeAlterationEffect implements AlterationEffect {
+public class ResistDamageAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
-    public DamageOverTimeAlterationEffect(Context context) {
+    public ResistDamageAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
@@ -39,32 +41,28 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
     }
 
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
-        DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
+        ResistDamageComponent dot = entity.getComponent(ResistDamageComponent.class);
         if (dot == null) {
-            dot = new DamageOverTimeComponent();
-            dot.damageAmount = TeraMath.floorToInt(magnitude);
-            dot.lastDamageTime = time.getGameTimeInMs();
+            dot = new ResistDamageComponent();
+            dot.resistAmount = TeraMath.floorToInt(magnitude);
             entity.addComponent(dot);
         } else {
-            dot.damageAmount = TeraMath.floorToInt(magnitude);
-            dot.lastDamageTime = time.getGameTimeInMs();
+            dot.resistAmount = TeraMath.floorToInt(magnitude);
             entity.addComponent(dot);
         }
 
-        DamageOverTimeEffect dotEffect = new DamageOverTimeEffect();
-        dotEffect.damageAmount = TeraMath.floorToInt(magnitude);
-        dotEffect.lastDamageTime = time.getGameTimeInMs();
-        // TODO: Temporary until more damage prefabs are added.
-        dotEffect.damageType = "AlterationEffects:PoisonDamage";
+        ResistDamageEffect resEffect = new ResistDamageEffect();
+        resEffect.resistAmount = TeraMath.floorToInt(magnitude);
+        resEffect.resistType = id;
 
-        if (dot.dots.get(id) == null) {
-            dot.dots.put(id, dotEffect);
+        if (dot.rdes.get(id) == null) {
+            dot.rdes.put(id, resEffect);
         } else {
-            dot.dots.replace(id, dotEffect);
+            dot.rdes.replace(id, resEffect);
         }
 
         entity.saveComponent(dot);
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
+        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE + ":" + id, duration);
     }
 }

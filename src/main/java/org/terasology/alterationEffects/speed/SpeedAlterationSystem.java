@@ -53,7 +53,10 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(ItemUseSpeedComponent.class)) {
-            event.multiply(entityRef.getComponent(ItemUseSpeedComponent.class).multiplier);
+            ItemUseSpeedComponent itemUseSpeed = entityRef.getComponent(ItemUseSpeedComponent.class);
+            if (itemUseSpeed.multiplier > 0) {
+                event.multiply(itemUseSpeed.multiplier);
+            }
         }
     }
 }
