@@ -35,8 +35,6 @@ public class StunAlterationEffect implements AlterationEffect {
         if (stun == null) {
             stun = new StunComponent();
             entity.addComponent(stun);
-        } else {
-            delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.STUN);
         }
 
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.STUN, duration);
