@@ -27,6 +27,7 @@ public final class AlterationEffects {
     public static final String MULTI_JUMP = "MultiJump";
     public static final String DAMAGE_OVER_TIME = "DamageOverTime";
     public static final String RESIST_DAMAGE = "ResistDamage";
+    public static final String STUN = "Stun";
 
     public static final String MAX_HEALTH_BOOST = "MaxHealthBoost";
 
