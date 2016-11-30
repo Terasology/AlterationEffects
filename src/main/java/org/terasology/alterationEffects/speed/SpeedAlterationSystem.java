@@ -29,7 +29,10 @@ import org.terasology.logic.characters.MovementMode;
 public class SpeedAlterationSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
-        if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
+        if (entityRef.hasComponent(StunComponent.class)){
+            event.multiply(0);
+        }
+        else if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(WalkSpeedComponent.class).multiplier);
         } else if (event.getMovementMode() == MovementMode.SWIMMING && entityRef.hasComponent(SwimSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(SwimSpeedComponent.class).multiplier);
@@ -38,7 +41,10 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
-        if (entityRef.hasComponent(JumpSpeedComponent.class)) {
+        if (entityRef.hasComponent(StunComponent.class)){
+            event.multiply(0);
+        }
+        else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(JumpSpeedComponent.class).multiplier);
         }
     }
