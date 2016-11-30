@@ -25,6 +25,7 @@ import org.terasology.alterationEffects.speed.MultiJumpComponent;
 import org.terasology.alterationEffects.speed.SwimSpeedComponent;
 import org.terasology.alterationEffects.speed.WalkSpeedComponent;
 import org.terasology.alterationEffects.speed.StunComponent;
+import org.terasology.alterationEffects.decover.DecoverComponent;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -50,6 +51,7 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         effectComponents.put(AlterationEffects.MAX_HEALTH_BOOST, HealthBoostComponent.class);
         effectComponents.put(AlterationEffects.ITEM_USE_SPEED, ItemUseSpeedComponent.class);
         effectComponents.put(AlterationEffects.STUN, StunComponent.class);
+        effectComponents.put(AlterationEffects.DECOVER, DecoverComponent.class);
     }
 
     @ReceiveEvent
