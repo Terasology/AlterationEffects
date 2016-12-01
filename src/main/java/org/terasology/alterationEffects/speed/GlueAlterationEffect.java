@@ -10,19 +10,29 @@ public class StunAlterationEffect implements AlterationEffect {
 
     private final DelayManager delayManager;
 
-    public StunAlterationEffect(Context context) {
+    public GlueAlterationEffect(Context context) {
         this.delayManager = context.get(DelayManager.class);
     }
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
-        StunComponent stun = entity.getComponent(StunComponent.class);
-        if (stun == null) {
-            stun = new StunComponent();
-            entity.addComponent(stun);
+        boolean add = false;
+        GlueComponent glue = entity.getComponent(GlueComponent.class);
+        if (glue == null) {
+            add = true;
+            glue = new GlueComponent();
+        }
+        walkSpeed.multiplier = magnitude*(.9);
+        jumpSpeed.multiplier = 0;
+        
+
+        if (add) {
+            entity.addComponent(glue);
+        } else {
+            entity.saveComponent(glue);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.STUN, duration);
+        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.GLUE, duration);
     }
 
     @Override
