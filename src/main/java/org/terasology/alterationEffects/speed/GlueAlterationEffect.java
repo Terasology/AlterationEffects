@@ -6,11 +6,11 @@ import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
-public class StunAlterationEffect implements AlterationEffect {
+public class WalkSpeedAlterationEffect implements AlterationEffect {
 
-    private final DelayManager delayManager;
+    private DelayManager delayManager;
 
-    public GlueAlterationEffect(Context context) {
+    public WalkSpeedAlterationEffect(Context context) {
         this.delayManager = context.get(DelayManager.class);
     }
 
@@ -20,11 +20,9 @@ public class StunAlterationEffect implements AlterationEffect {
         GlueComponent glue = entity.getComponent(GlueComponent.class);
         if (glue == null) {
             add = true;
-            glue = new GlueComponent();
+            glue = new WalkSpeedComponent();
         }
-        walkSpeed.multiplier = magnitude*(.9);
-        jumpSpeed.multiplier = 0;
-        
+        glue.multiplier = magnitude;
 
         if (add) {
             entity.addComponent(glue);
