@@ -39,7 +39,7 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
         
         if (entityRef.hasComponent(GlueComponent.class)){
-            event.multiply(.9);
+            event.multiply(0.9f);
         }
     }
 
