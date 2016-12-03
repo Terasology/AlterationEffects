@@ -37,6 +37,10 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         } else if (event.getMovementMode() == MovementMode.SWIMMING && entityRef.hasComponent(SwimSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(SwimSpeedComponent.class).multiplier);
         }
+        
+        if (entityRef.hasComponent(GlueComponent.class)){
+            event.multiply(.9);
+        }
     }
 
     @ReceiveEvent
@@ -46,6 +50,10 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
         else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(JumpSpeedComponent.class).multiplier);
+        }
+        
+        if (entityRef.hasComponent(GlueComponent.class)){
+            event.multiply(0);
         }
     }
 
