@@ -17,8 +17,8 @@ package org.terasology.alterationEffects;
 
 import org.terasology.alterationEffects.boost.HealthBoostComponent;
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
 import org.terasology.alterationEffects.regenerate.RegenerationComponent;
+import org.terasology.alterationEffects.speed.GlueComponent;
 import org.terasology.alterationEffects.speed.ItemUseSpeedComponent;
 import org.terasology.alterationEffects.speed.JumpSpeedComponent;
 import org.terasology.alterationEffects.speed.MultiJumpComponent;
@@ -52,6 +52,7 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         effectComponents.put(AlterationEffects.ITEM_USE_SPEED, ItemUseSpeedComponent.class);
         effectComponents.put(AlterationEffects.STUN, StunComponent.class);
         effectComponents.put(AlterationEffects.DECOVER, DecoverComponent.class);
+        effectComponents.put(AlterationEffects.GLUE, GlueComponent.class);
     }
 
     @ReceiveEvent

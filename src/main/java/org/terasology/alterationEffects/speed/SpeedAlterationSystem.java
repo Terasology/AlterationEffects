@@ -29,30 +29,28 @@ import org.terasology.logic.characters.MovementMode;
 public class SpeedAlterationSystem extends BaseComponentSystem {
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
-        if (entityRef.hasComponent(StunComponent.class)){
+        if (entityRef.hasComponent(StunComponent.class)) {
             event.multiply(0);
-        }
-        else if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
+        } else if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(WalkSpeedComponent.class).multiplier);
         } else if (event.getMovementMode() == MovementMode.SWIMMING && entityRef.hasComponent(SwimSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(SwimSpeedComponent.class).multiplier);
         }
         
-        if (entityRef.hasComponent(GlueComponent.class)){
+        if (entityRef.hasComponent(GlueComponent.class)) {
             event.multiply(0.9f);
         }
     }
 
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
-        if (entityRef.hasComponent(StunComponent.class)){
+        if (entityRef.hasComponent(StunComponent.class)) {
             event.multiply(0);
-        }
-        else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
+        } else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
             event.multiply(entityRef.getComponent(JumpSpeedComponent.class).multiplier);
         }
         
-        if (entityRef.hasComponent(GlueComponent.class)){
+        if (entityRef.hasComponent(GlueComponent.class)) {
             event.multiply(0);
         }
     }
