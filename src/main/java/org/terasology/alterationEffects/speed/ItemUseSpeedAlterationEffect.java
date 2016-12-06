@@ -47,8 +47,9 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
             entity.saveComponent(jumpSpeed);
         }
 
-        delayManager.addDelayedAction(entity,
-                AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity,AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED, duration);
+        }
     }
 
     @Override

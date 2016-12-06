@@ -45,7 +45,9 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
             entity.saveComponent(walkSpeed);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
+        }
     }
 
     @Override

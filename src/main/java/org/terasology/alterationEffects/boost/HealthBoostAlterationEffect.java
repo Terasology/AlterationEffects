@@ -43,7 +43,7 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
             hbot.lastUseTime = time.getGameTimeInMs();
 
             HealthComponent h = entity.getComponent(HealthComponent.class);
-            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*hbot.boostAmount));
+            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f * hbot.boostAmount));
 
             entity.addComponent(hbot);
         } else {
@@ -54,12 +54,14 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
 
             hbot.boostAmount = TeraMath.floorToInt(magnitude);
             hbot.lastUseTime = time.getGameTimeInMs();
-            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f*hbot.boostAmount));
+            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f * hbot.boostAmount));
 
             entity.addComponent(hbot);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);
+        }
     }
 
     @Override

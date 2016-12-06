@@ -36,7 +36,9 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
             entity.saveComponent(new WaterBreathingComponent());
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
+        }
     }
 
     @Override
