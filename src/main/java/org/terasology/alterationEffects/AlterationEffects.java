@@ -30,6 +30,7 @@ public final class AlterationEffects {
     public static final String STUN = "Stun";
     public static final String DECOVER = "Decover";
     public static final String GLUE = "Glue";
+    public static final String ENLARGE = "Enlarge";
 
     public static final String MAX_HEALTH_BOOST = "MaxHealthBoost";
 
