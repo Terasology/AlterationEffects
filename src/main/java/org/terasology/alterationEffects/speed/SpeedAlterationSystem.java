@@ -25,8 +25,18 @@ import org.terasology.logic.characters.AffectMultiJumpEvent;
 import org.terasology.logic.characters.GetMaxSpeedEvent;
 import org.terasology.logic.characters.MovementMode;
 
+/**
+ * This system defines how various speed modifications work.
+ */
 @RegisterSystem
 public class SpeedAlterationSystem extends BaseComponentSystem {
+
+    /**
+     * Modifies the walk/swim speed of an entity.
+     *
+     * @param event     The event sent when the max speed of the entity is being accessed
+     * @param entityRef The entity whose max speed is to be modified
+     */
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(StunComponent.class)) {
@@ -42,6 +52,12 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the jump speed of an entity.
+     *
+     * @param event     The event sent when the jump force of the entity is being accessed
+     * @param entityRef The entity whose jump speed is to be modified
+     */
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(StunComponent.class)) {
@@ -55,6 +71,12 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the multi-jump attribute of an entity.
+     *
+     * @param event     The event sent when the multi-jump attribute is being accessed
+     * @param entityRef The entity whose multi-jump attribute is to be changed
+     */
     @ReceiveEvent
     public void modifyMultiJump(AffectMultiJumpEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(MultiJumpComponent.class)) {
@@ -62,6 +84,12 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the item use speed of an entity.
+     *
+     * @param event     The event sent when the item use cooldown is being accessed
+     * @param entityRef The entity whose item use speed is to be changed.
+     */
     @ReceiveEvent
     public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(ItemUseSpeedComponent.class)) {

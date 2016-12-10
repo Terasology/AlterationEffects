@@ -15,9 +15,11 @@
  */
 package org.terasology.alterationEffects.damageOverTime;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.reflection.MappedContainer;
 
+/**
+ * A class containing information about a single damage over time effect.
+ */
 @MappedContainer
 public class DamageOverTimeEffect {
     public int damageAmount;

@@ -17,8 +17,28 @@ package org.terasology.alterationEffects;
 
 import org.terasology.entitySystem.entity.EntityRef;
 
+/**
+ * A general interface for an alteration effect.
+ */
 public interface AlterationEffect {
+    /**
+     * Apply an effect to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration);
 
+    /**
+     * Apply an effect with a specific ID to an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration);
 }

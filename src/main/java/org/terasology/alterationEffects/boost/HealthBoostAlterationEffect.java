@@ -24,16 +24,32 @@ import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.health.HealthComponent;
 import org.terasology.math.TeraMath;
 
+/**
+ * This class defines the health boost alteration effect, which gives a temporary buff to an entity's maximum health.
+ */
 public class HealthBoostAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the boost
+     */
     public HealthBoostAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Apples the health boost effect to a given entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         HealthBoostComponent hbot = entity.getComponent(HealthBoostComponent.class);
@@ -62,6 +78,15 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);
     }
 
+    /**
+     * Applies a health boost effect to a given entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

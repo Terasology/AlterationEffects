@@ -21,14 +21,30 @@ import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
+/**
+ * An effect that buffs the speed while walking of the entity to which the effect is applied.
+ */
 public class WalkSpeedAlterationEffect implements AlterationEffect {
 
     private DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the boost
+     */
     public WalkSpeedAlterationEffect(Context context) {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies a walk speed buff to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -48,6 +64,15 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
     }
 
+    /**
+     * Applies a walk speed buff to an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

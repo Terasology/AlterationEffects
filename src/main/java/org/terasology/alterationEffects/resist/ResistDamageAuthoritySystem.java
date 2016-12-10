@@ -15,11 +15,7 @@
  */
 package org.terasology.alterationEffects.resist;
 
-import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
-import org.terasology.alterationEffects.breath.WaterBreathingComponent;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -27,14 +23,13 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.logic.health.BeforeDamagedEvent;
-import org.terasology.logic.health.DoDamageEvent;
-import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
-import org.terasology.utilities.Assets;
 
+/**
+ * This authority system defines how the resist damage effect works.
+ */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     private static final int CHECK_INTERVAL = 100;
@@ -47,6 +42,13 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes a resist damage effect from an entity.
+     *
+     * @param event     The event corresponding to the triggering of the expiry of the effect
+     * @param entity    The entity from which the effect is to be removed
+     * @param component The resist damage component associated with the effect to be removed
+     */
     @ReceiveEvent
     public void expireResistDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, ResistDamageComponent component) {
         final String actionId = event.getActionId();
@@ -68,6 +70,12 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Resists damage of certain types (specified by the active resist damage effect).
+     * @param event     The event containing the state before the damage was dealt
+     * @param entity    The entity on which damage is being dealt
+     * @param component THe resist damage component associated with the effect on the entity
+     */
     @ReceiveEvent
     public void resistDamageOfType(BeforeDamagedEvent event, EntityRef entity, ResistDamageComponent component) {
         String damageType = event.getDamageType().getName();

@@ -22,7 +22,7 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
 /**
- * This handles the applying of the decover effect, which prevents an entity from healing for a specified duration
+ * This handles the applying of the decover effect, which prevents an entity from healing for a specified duration.
  */
 public class DecoverAlterationEffect implements AlterationEffect {
 
@@ -33,12 +33,12 @@ public class DecoverAlterationEffect implements AlterationEffect {
     }
 
     /**
-     * This applies the decover effect on the entity
+     * Applies the decover effect on an entity.
      *
      * @param instigator the entity who applied the decover effect
-     * @param entity the entity the decover effect is applied on
-     * @param magnitude inapplicable to the decover effect
-     * @param duration the duration for which the decover effect lasts
+     * @param entity     the entity the decover effect is applied on
+     * @param magnitude  inapplicable to the decover effect
+     * @param duration   the duration for which the decover effect lasts
      */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
@@ -51,6 +51,15 @@ public class DecoverAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
     }
 
+    /**
+     * Applies the decover effect on an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

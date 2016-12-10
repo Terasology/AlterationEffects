@@ -15,14 +15,21 @@
  */
 package org.terasology.alterationEffects.resist;
 
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
 import org.terasology.entitySystem.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A component containing information about resist damage effects on an entity.
+ */
 public class ResistDamageComponent implements Component {
+    /** The amount of damage that can be resisted due to the effects. */
     public int resistAmount;
+
+    /** The source of the effect. */
     public String source;
+
+    /** A map between IDs and resist damage effects on an entity. */
     public Map<String, ResistDamageEffect> rdes = new HashMap<String, ResistDamageEffect>();
 }

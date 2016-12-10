@@ -22,21 +22,47 @@ import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
+/**
+ * This class defines an effect that negates damage dealt by any damage over time effect on the entity
+ */
 public class CureDamageOverTimeAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the effect is applied
+     */
     public CureDamageOverTimeAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the default cure damage over time effect to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         applyEffect(instigator, entity, "Default", magnitude, duration);
     }
 
+    /**
+     * Applies the cure damage over time effect such that it negates damage dealt by damage over time effects with a
+     * given ID.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);

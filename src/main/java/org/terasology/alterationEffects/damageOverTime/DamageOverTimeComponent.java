@@ -16,14 +16,23 @@
 package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A component that contains information about damage over time effects on an entity.
+ */
 public class DamageOverTimeComponent implements Component {
+    /** The damage amount. */
     public int damageAmount;
+
+    /** The last time the damage was dealt by the effect. */
     public long lastDamageTime;
+
+    /** The source of the effect/ */
     public String source;
+
+    /** A map between effect IDs and damage over time effects on an entity. */
     public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();
 }

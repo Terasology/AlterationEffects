@@ -26,6 +26,9 @@ import org.terasology.logic.health.DoHealEvent;
 import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
 
+/**
+ * This authority system defines how the regeneration effect works.
+ */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class RegenerationAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     private static final int CHECK_INTERVAL = 100;
@@ -38,6 +41,11 @@ public class RegenerationAuthoritySystem extends BaseComponentSystem implements 
     @In
     private EntityManager entityManager;
 
+    /**
+     * Regenerates the entity's health over time during an engine update.
+     *
+     * @param delta The time (in seconds) since the last engine update
+     */
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();

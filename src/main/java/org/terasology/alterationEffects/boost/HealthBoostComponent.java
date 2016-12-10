@@ -17,10 +17,22 @@ package org.terasology.alterationEffects.boost;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * A component class containing information about a health boost effect.
+ */
 public class HealthBoostComponent implements Component {
+    /** The amount by which the maximum health is boosted. */
     public int boostAmount;
+
+    /** The time when the effect was last used. */
     public long lastUseTime;
+
+    /** The old value of the maximum health of the entity to which the effect is applied. */
     public int oldBaseMax;
+
+    /** The new value of the maximum health of the entity to which the effect is applied. */
     public int newBaseMax;
+
+    /** The source of the effect. */
     public String source;
 }

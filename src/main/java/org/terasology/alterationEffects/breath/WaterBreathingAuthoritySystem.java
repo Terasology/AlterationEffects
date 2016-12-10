@@ -24,8 +24,18 @@ import org.terasology.logic.health.BeforeDamagedEvent;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.BlockUri;
 
+/**
+ * This authority system defines hpw the water breathing effect works.
+ */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class WaterBreathingAuthoritySystem extends BaseComponentSystem {
+    /**
+     * This method makes sure that damage from water is cancelled when the effect is enabled on an entity.
+     *
+     * @param event     The event containing the state before the damage is received
+     * @param entity    The entity on which the damage is to be negated
+     * @param component The component corresponding to the water breathing effect on the entity
+     */
     @ReceiveEvent
     public void cancelDamageFromWater(BeforeDamagedEvent event, EntityRef entity, WaterBreathingComponent component) {
         final BlockComponent block = event.getInstigator().getComponent(BlockComponent.class);

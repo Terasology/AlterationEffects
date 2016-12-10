@@ -17,7 +17,6 @@ package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.engine.Time;
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -27,11 +26,13 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.logic.health.DoDamageEvent;
-import org.terasology.logic.health.EngineDamageTypes;
 import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
 import org.terasology.utilities.Assets;
 
+/**
+ * This authority system defines how the damage over time alteration effect works.
+ */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     private static final int CHECK_INTERVAL = 100;
@@ -44,6 +45,13 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes a damage over time effect from a given entity.
+     *
+     * @param event     The event corresponding to the triggering of the expiry of the effect
+     * @param entity    The entity from which the effect is to be removed
+     * @param component The damage over time component associated with the effect to be removed
+     */
     @ReceiveEvent
     public void expireDOTEffect(DelayedActionTriggeredEvent event, EntityRef entity, DamageOverTimeComponent component) {
         final String actionId = event.getActionId();
@@ -65,6 +73,11 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
         }
     }
 
+    /**
+     * Deals damage to the entity (on which the effect is applied) during an engine update.
+     *
+     * @param delta The time (in seconds) since the last engine update
+     */
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();

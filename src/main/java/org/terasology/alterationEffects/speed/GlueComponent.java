@@ -17,7 +17,10 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.entitySystem.Component;
 
-/** Meant to represent a stickying effect of some sort, as if stuck in a spiderweb. */
+/**
+ * A component applied to entities with an active glue effect.
+ */
 public class GlueComponent implements Component {
+    /** The amount by which the entity's movement speed is multiplied. */
     public float multiplier;
 }

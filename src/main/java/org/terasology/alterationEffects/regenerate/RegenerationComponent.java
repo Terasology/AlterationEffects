@@ -17,7 +17,13 @@ package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to an entity when a regeneration effect is applied to it. Contains information about the effect.
+ */
 public class RegenerationComponent implements Component {
+    /** The regeneration amount. */
     public int regenerationAmount;
+
+    /** The last time the entity's health was increased due to the effect. */
     public long lastRegenerationTime;
 }

@@ -16,6 +16,9 @@
 package org.terasology.alterationEffects.speed;
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to entities with active multi-jump effects.
+ */
 public class MultiJumpComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
     public float multiplier;

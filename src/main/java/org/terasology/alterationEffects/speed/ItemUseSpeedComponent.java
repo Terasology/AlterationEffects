@@ -16,8 +16,13 @@
 package org.terasology.alterationEffects.speed;
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to an entity with an active item use speed component.
+ */
 public class ItemUseSpeedComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+
+    /** The amount by which the entity's item use speed is multiplied. */
     public float multiplier;
 }
 

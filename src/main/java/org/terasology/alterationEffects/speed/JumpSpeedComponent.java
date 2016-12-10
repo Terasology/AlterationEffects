@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 package org.terasology.alterationEffects.speed;
-import org.terasology.entitySystem.Component;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to entities with an active jump speed buff.
+ */
 public class JumpSpeedComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+
+    /** The amount by which the entity's jump speed is multiplied. */
     public float multiplier;
 }
 

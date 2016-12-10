@@ -21,14 +21,30 @@ import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
+/**
+ * This class defines an alteration effect that allows an entity to breathe underwater.
+ */
 public class WaterBreathingAlterationEffect implements AlterationEffect {
 
     private DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the effect is applied
+     */
     public WaterBreathingAlterationEffect(Context context) {
         delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the water breathing effect to a given entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         final WaterBreathingComponent component = entity.getComponent(WaterBreathingComponent.class);
@@ -39,6 +55,15 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
     }
 
+    /**
+     * Applies the water breathing effect to a given entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

@@ -36,10 +36,17 @@ import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class contains a list of components corresponding to various alteration effects, and a method to remove an
+ * effect from a given entity.
+ */
 @RegisterSystem
 public class EffectsAuthoritySystem extends BaseComponentSystem {
     private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
 
+    /**
+     * Initialises the effect components list with appropriate components.
+     */
     @Override
     public void initialise() {
         effectComponents.put(AlterationEffects.WALK_SPEED, WalkSpeedComponent.class);
@@ -55,6 +62,12 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         effectComponents.put(AlterationEffects.GLUE, GlueComponent.class);
     }
 
+    /**
+     * Removes an effect from an entity.
+     *
+     * @param event  The event sent when the removal of the effect is triggered
+     * @param entity The entity from which the effect should be removed
+     */
     @ReceiveEvent
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
         final String actionId = event.getActionId();

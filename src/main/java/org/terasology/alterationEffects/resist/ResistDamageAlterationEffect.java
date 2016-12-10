@@ -17,29 +17,52 @@ package org.terasology.alterationEffects.resist;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
 
+/**
+ * This class defines an effect that allows an entity to resist a certain amount of damage.
+ */
 public class ResistDamageAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the boost
+     */
     public ResistDamageAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies a default resist damage effect to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         applyEffect(instigator, entity, "Default", magnitude, duration);
     }
 
+    /**
+     * Applies a resist damage effect with a specified ID to an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         ResistDamageComponent dot = entity.getComponent(ResistDamageComponent.class);
         if (dot == null) {

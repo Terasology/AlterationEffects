@@ -17,9 +17,17 @@ package org.terasology.alterationEffects.resist;
 
 import org.terasology.reflection.MappedContainer;
 
+/**
+ * This class contains information about a single resist damage effect.
+ */
 @MappedContainer
 public class ResistDamageEffect {
+    /** The amount of damage that the effect can resist. */
     public int resistAmount;
+
+    /** The last time damage was resisted due to the effect. */
     public long lastDamageTime;
+
+    /** The type of damage that the effect can resist. */
     public String resistType;
 }

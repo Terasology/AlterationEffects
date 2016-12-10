@@ -17,6 +17,10 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * THe component added to entities which have an active swim speed buff.
+ */
 public class SwimSpeedComponent implements Component {
+    /** The amount by which the swim speed of the entity is multiplied. */
     public float multiplier;
 }

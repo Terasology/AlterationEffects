@@ -17,5 +17,8 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to an entity to indicate an active stun effect.
+ */
 public class StunComponent implements Component {
 }

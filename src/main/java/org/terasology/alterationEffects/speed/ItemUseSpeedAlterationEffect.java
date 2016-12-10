@@ -21,14 +21,30 @@ import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 
+/**
+ * An effect which changes the speed at which an entity can use items.
+ */
 public class ItemUseSpeedAlterationEffect implements AlterationEffect {
 
     private DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the boost
+     */
     public ItemUseSpeedAlterationEffect(Context context) {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the item use speed effect to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -51,6 +67,15 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
                 AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED, duration);
     }
 
+    /**
+     * Applies the item use speed effect to an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

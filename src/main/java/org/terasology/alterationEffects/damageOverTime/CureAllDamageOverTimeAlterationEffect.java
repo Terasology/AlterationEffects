@@ -21,18 +21,33 @@ import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
-import org.terasology.math.TeraMath;
 
+/**
+ * This class represents an effect that cures all "damage over time" effects on an entity immediately.
+ */
 public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
 
+    /**
+     * Parametrized constructor.
+     *
+     * @param context A Context object representing the state before the effect is applied
+     */
     public CureAllDamageOverTimeAlterationEffect(Context context) {
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Apply the cure all damage over time effect to an entity.
+     *
+     * @param instigator The entity applying the effect
+     * @param entity     The entity to which the effect is being applied
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
@@ -42,6 +57,15 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
         }
     }
 
+    /**
+     * Apply the cure all damage over time effect to an entity.
+     *
+     * @param instigator The instigator of the action
+     * @param entity     The entity to which the effect is being applied
+     * @param id         The ID of the effect
+     * @param magnitude  The magnitude of the effect
+     * @param duration   The duration of the effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

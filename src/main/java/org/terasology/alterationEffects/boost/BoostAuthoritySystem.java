@@ -30,6 +30,9 @@ import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
 import org.terasology.utilities.Assets;
 
+/**
+ * This class defines how the maximum health buff effect works.
+ */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class BoostAuthoritySystem extends BaseComponentSystem {
     private static final int CHECK_INTERVAL = 250;
@@ -42,6 +45,13 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes the maximum health buff from a given entity.
+     *
+     * @param event  The event representing the state before the deactivation of the effect
+     * @param entity The entity from which the effect is to be removed
+     * @param hBoost The health boost component associated with the effect
+     */
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);

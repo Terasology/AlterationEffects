@@ -17,6 +17,10 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * The component added to entities with an active walk speed buff.
+ */
 public class WalkSpeedComponent implements Component {
+    /** The amount by which the walk speed of the entity is multiplied. */
     public float multiplier;
 }

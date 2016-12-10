@@ -23,15 +23,15 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.health.BeforeHealEvent;
 
 /**
- * This handles the events for the decover effect
+ * This handles events pertaining to the decover effect
  */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class DecoverAuthoritySystem extends BaseComponentSystem {
     /**
-     * This prevents the entity from being healed
+     * Prevents the entity from being healed
      *
-     * @param event the event called before an entity is healed
-     * @param entity the entity with the decover effect
+     * @param event     the event called before an entity is healed
+     * @param entity    the entity with the decover effect
      * @param component the decover component added to entities with the decover effect
      */
     @ReceiveEvent
