@@ -29,6 +29,14 @@ public class StunAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Stun effect on the entity - prevents the entity from moving or jumping
+     *
+     * @param instigator the entity which applied the Stun effect
+     * @param entity the entity the Stun effect is applied on
+     * @param magnitude inapplicable to the Stun effect
+     * @param duration the duration for which the Stun effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         StunComponent stun = entity.getComponent(StunComponent.class);
@@ -40,6 +48,15 @@ public class StunAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.STUN, duration);
     }
 
+    /**
+     * Applies the Stun effect on the entity - prevents the entity from moving or jumping
+     *
+     * @param instigator the entity which applied the Stun effect
+     * @param entity the entity the Stun effect is applied on
+     * @param id inapplicable to the Stun effect
+     * @param magnitude inapplicable to the Stun effect
+     * @param duration the duration for which the Stun effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

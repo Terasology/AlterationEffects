@@ -33,11 +33,28 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Damage Over Time effect on the entity - they take damage at regular intervals
+     *
+     * @param instigator the entity which applied the Damage Over Time effect
+     * @param entity the entity the Damage Over Time effect is applied on
+     * @param magnitude the damage taken by the entity regains at each interval
+     * @param duration the duration for which the Damage Over Time effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         applyEffect(instigator, entity, "Default", magnitude, duration);
     }
 
+    /**
+     * Applies the Damage Over Time effect on the entity - they regain health at regular intervals
+     *
+     * @param instigator the entity which applied the Damage Over Time effect
+     * @param entity the entity the Damage Over Time effect is applied on
+     * @param id the type of damage taken by the entity
+     * @param magnitude the damage taken by the entity regains at each interval
+     * @param duration the duration for which the Damage Over Time effect lasts
+     */
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
         if (dot == null) {

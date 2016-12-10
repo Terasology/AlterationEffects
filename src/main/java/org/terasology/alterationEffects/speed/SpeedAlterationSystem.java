@@ -27,6 +27,12 @@ import org.terasology.logic.characters.MovementMode;
 
 @RegisterSystem
 public class SpeedAlterationSystem extends BaseComponentSystem {
+    /**
+     * Modifies the moving speed for entities affected by Speed effects
+     *
+     * @param event the event which retrieves the maximum speed for an entity
+     * @param entityRef the entity for which the maximum speed is retrieved
+     */
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(StunComponent.class)) {
@@ -42,6 +48,11 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the jump speed for entities affected by Jump Speed effects
+     *
+     * @param event the event corresponding to the multi jump being affected
+     */
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(StunComponent.class)) {
@@ -55,6 +66,11 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the multi jump ability for entities affected by Item Use Speed effects
+     *
+     * @param event the event corresponding to the multi jump being affected
+     */
     @ReceiveEvent
     public void modifyMultiJump(AffectMultiJumpEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(MultiJumpComponent.class)) {
@@ -62,6 +78,12 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Modifies the item cooldowns based for entities affected by Item Use Speed effects
+     *
+     * @param event the event corresponding to the item cooldown being affected
+     * @param entityRef the entity which holds the item
+     */
     @ReceiveEvent
     public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {
         if (entityRef.hasComponent(ItemUseSpeedComponent.class)) {

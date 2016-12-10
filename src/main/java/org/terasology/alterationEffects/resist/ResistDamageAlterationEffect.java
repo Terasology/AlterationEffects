@@ -35,11 +35,28 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Resist Damage effect on the entity - they receive reduced damage from certain types of damage
+     *
+     * @param instigator the entity which applied the Resist Damage effect
+     * @param entity the entity the Resist effect is applied on
+     * @param magnitude the amount of damage that is negated each time
+     * @param duration the duration for which the Resist Damage effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         applyEffect(instigator, entity, "Default", magnitude, duration);
     }
 
+    /**
+     * Applies the Resist Damage effect on the entity - they receive reduced damage from certain types of damage
+     *
+     * @param instigator the entity which applied the Resist Damage effect
+     * @param entity the entity the Resist effect is applied on
+     * @param id the id of the type of damage that is reduced by the Resist Damage effect
+     * @param magnitude the amount of damage that is negated each time
+     * @param duration the duration for which the Resist Damage effect lasts
+     */
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         ResistDamageComponent dot = entity.getComponent(ResistDamageComponent.class);
         if (dot == null) {

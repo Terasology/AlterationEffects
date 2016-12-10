@@ -18,6 +18,9 @@ import org.terasology.entitySystem.Component;
 
 public class MultiJumpComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+    /**
+     * the number of times the entity can jump in mid-air without landing
+     */
     public float multiplier;
 }
 

@@ -22,7 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DamageOverTimeComponent implements Component {
+    /**
+     * the amount of damage dealt each tick
+     */
     public int damageAmount;
+    /**
+     * the time the entity was last damaged by the Damage Over Time effect
+     */
     public long lastDamageTime;
     public String source;
     public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();

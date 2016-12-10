@@ -18,5 +18,8 @@ package org.terasology.alterationEffects.speed;
 import org.terasology.entitySystem.Component;
 
 public class WalkSpeedComponent implements Component {
+    /**
+     * the multiplier applied to the walking speed
+     */
     public float multiplier;
 }

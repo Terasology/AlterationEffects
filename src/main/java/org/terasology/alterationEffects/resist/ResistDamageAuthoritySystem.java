@@ -47,6 +47,13 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes the Resist Damage effect on entities affected by it after the duration is up
+     *
+     * @param event the event corresponding to the Delayed Action called by the Resist Damage effect
+     * @param entity the entity affected by the Resist Damage effect
+     * @param component the ResistDamageComponent on the entity affected by the Resist Damage effect
+     */
     @ReceiveEvent
     public void expireResistDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, ResistDamageComponent component) {
         final String actionId = event.getActionId();
@@ -68,6 +75,13 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
         }
     }
 
+    /**
+     * Reduces damage dealth of a specific type to entities affected by the Resist Damage effect
+     *
+     * @param event the event called before the entity is damaged
+     * @param entity the entity that is being damaged
+     * @param component the ResistDamageComponent on the entity affected by the Resist Damage effect
+     */
     @ReceiveEvent
     public void resistDamageOfType(BeforeDamagedEvent event, EntityRef entity, ResistDamageComponent component) {
         String damageType = event.getDamageType().getName();

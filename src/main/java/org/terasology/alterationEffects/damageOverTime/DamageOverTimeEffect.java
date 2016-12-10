@@ -20,7 +20,16 @@ import org.terasology.reflection.MappedContainer;
 
 @MappedContainer
 public class DamageOverTimeEffect {
+    /**
+     * the amount of damage dealt each tick
+     */
     public int damageAmount;
+    /**
+     * the time the entity was last damaged by the Damage Over Time effect
+     */
     public long lastDamageTime;
+    /**
+     * the type of damage dealth by the Damage Over Time effect
+     */
     public String damageType;
 }

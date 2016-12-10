@@ -18,6 +18,12 @@ package org.terasology.alterationEffects.regenerate;
 import org.terasology.entitySystem.Component;
 
 public class RegenerationComponent implements Component {
+    /**
+     * the amount of health which the entity regains at each interval
+     */
     public int regenerationAmount;
+    /**
+     * the time the entity was last healed by the Regeneration effect
+     */
     public long lastRegenerationTime;
 }

@@ -26,6 +26,13 @@ import org.terasology.world.block.BlockUri;
 
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class WaterBreathingAuthoritySystem extends BaseComponentSystem {
+    /**
+     * Negates damage dealt by water blocks
+     *
+     * @param event the event called before damage dealt to the entity
+     * @param entity the entity being damaged
+     * @param component the WaterBreathingComponent on the entity affected by the Water Breathing effect
+     */
     @ReceiveEvent
     public void cancelDamageFromWater(BeforeDamagedEvent event, EntityRef entity, WaterBreathingComponent component) {
         final BlockComponent block = event.getInstigator().getComponent(BlockComponent.class);

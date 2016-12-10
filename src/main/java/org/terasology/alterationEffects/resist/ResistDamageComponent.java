@@ -22,7 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResistDamageComponent implements Component {
+    /**
+     * the amount that damage is reduced each time
+     */
     public int resistAmount;
     public String source;
+    /**
+     * maps the type of damage being reduced to its ResistDamageEffect object
+     */
     public Map<String, ResistDamageEffect> rdes = new HashMap<String, ResistDamageEffect>();
 }

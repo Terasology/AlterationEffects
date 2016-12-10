@@ -33,6 +33,14 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Cure All Damage effect on the entity - entity cannot be healed by any source
+     *
+     * @param instigator the entity which applied the Cure All Damage effect
+     * @param entity the entity the Cure All Damage effect is applied on
+     * @param magnitude inapplicable to the Cure All Damage effect
+     * @param duration the duration for which the Cure All Damage effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
@@ -42,6 +50,15 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
         }
     }
 
+    /**
+     * Applies the Cure All Damage effect on the entity - removes any Damage Over Time effect immediately
+     *
+     * @param instigator the entity which applied the Cure All Damage effect
+     * @param entity the entity the Cure All Damage effect is applied on
+     * @param id inapplicable to the Cure All Damage effect
+     * @param magnitude inapplicable to the Cure All Damage effect
+     * @param duration the duration for which the Cure All Damage effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

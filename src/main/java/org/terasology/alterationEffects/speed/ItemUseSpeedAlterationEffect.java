@@ -29,6 +29,14 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Item Use Speed effect on the entity - affects the cooldowns of items
+     *
+     * @param instigator the entity which applied the Item Use Speed effect
+     * @param entity the entity the Item Use Speed effect is applied on
+     * @param magnitude the multiplier applied to item cooldowns
+     * @param duration the duration for which the Item Use Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -51,6 +59,15 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
                 AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED, duration);
     }
 
+    /**
+     * Applies the Item Use Speed effect on the entity - affects the cooldowns of items
+     *
+     * @param instigator the entity which applied the Item Use Speed effect
+     * @param entity the entity the Item Use Speed effect is applied on
+     * @param id inapplicable to the Item Use Speed effect
+     * @param magnitude the multiplier applied to item cooldowns
+     * @param duration the duration for which the Item Use Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

@@ -44,6 +44,13 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes the Damage Over Time effect on entities affected by it after the duration is up
+     *
+     * @param event the event corresponding to the Delayed Action called by the Damage Over Time effect
+     * @param entity the entity affected by the Damage Over Time effect
+     * @param component the DamageOverTimeComponent on the entity affected by the Damage Over Time effect
+     */
     @ReceiveEvent
     public void expireDOTEffect(DelayedActionTriggeredEvent event, EntityRef entity, DamageOverTimeComponent component) {
         final String actionId = event.getActionId();
@@ -65,6 +72,11 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
         }
     }
 
+    /**
+     * Deals damage to all entities affected by the Damage Over Time effect
+     *
+     * @param delta The time (in seconds) since the last engine update.
+     */
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();

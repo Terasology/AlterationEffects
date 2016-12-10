@@ -18,7 +18,13 @@ package org.terasology.alterationEffects.boost;
 import org.terasology.entitySystem.Component;
 
 public class HealthBoostComponent implements Component {
+    /**
+     * the percentage increase in health due to the Health Boost effect
+     */
     public int boostAmount;
+    /**
+     * the time the Health Boost effect was last used on the entity
+     */
     public long lastUseTime;
     public int oldBaseMax;
     public int newBaseMax;

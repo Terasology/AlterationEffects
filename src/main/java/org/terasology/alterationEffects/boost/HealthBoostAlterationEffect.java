@@ -34,6 +34,14 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Health Boost effect on the entity - maximum health increased by a percentage
+     *
+     * @param instigator the entity which applied the Health Boost effect
+     * @param entity the entity the Health Boost effect is applied on
+     * @param magnitude the percentage increase in maximum health due to the Health Boost effect
+     * @param duration the duration of the Health Boost effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         HealthBoostComponent hbot = entity.getComponent(HealthBoostComponent.class);
@@ -62,6 +70,15 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);
     }
 
+    /**
+     * Applies the Health Boost effect on the entity - maximum health increased by a percentage
+     *
+     * @param instigator the entity which applied the HealthBoost effect
+     * @param entity the entity the Health Boost effect is applied on
+     * @param id inapplicable to the Health Boost effect
+     * @param magnitude the percentage increase in maximum health due to the HealthBoost
+     * @param duration the duration of the Health Boost effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

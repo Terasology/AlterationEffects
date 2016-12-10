@@ -38,6 +38,11 @@ public class RegenerationAuthoritySystem extends BaseComponentSystem implements 
     @In
     private EntityManager entityManager;
 
+    /**
+     * Heals entities affected by the Regeneration effect at each tick
+     *
+     * @param delta The time (in seconds) since the last engine update.
+     */
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();

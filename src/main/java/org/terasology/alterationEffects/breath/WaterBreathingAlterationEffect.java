@@ -29,6 +29,14 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
         delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Water Breathing effect on the entity - can stay underwater without taking damage
+     *
+     * @param instigator the entity which applied the Water Breathing effect
+     * @param entity the entity the Water Breathing effect is applied on
+     * @param magnitude inapplicable to the Water Breathing effect
+     * @param duration the duration of the Water Breathing effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         final WaterBreathingComponent component = entity.getComponent(WaterBreathingComponent.class);
@@ -39,6 +47,15 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
     }
 
+    /**
+     * Applies the Water Breathing effect on the entity - can stay underwater without taking damage
+     *
+     * @param instigator the entity which applied the Water Breathing effect
+     * @param entity the entity the Water Breathing effect is applied on
+     * @param id inapplicable to the Water Breathing effect
+     * @param magnitude the percentage increase in maximum health due to the Water Breathing effect
+     * @param duration the duration of the Water Breathing effect
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

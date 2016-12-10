@@ -29,6 +29,14 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Jump Speed effect on the entity - affects the height of jumps
+     *
+     * @param instigator the entity which applied the Jump Speed effect
+     * @param entity the entity the Jump Speed effect is applied on
+     * @param magnitude the factor by which jump height is increased
+     * @param duration the duration for which the Jump Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -51,6 +59,15 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
                 AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED, duration);
     }
 
+    /**
+     * Applies the Jump Speed effect on the entity - affects the height of jumps
+     *
+     * @param instigator the entity which applied the Jump Speed effect
+     * @param entity the entity the Jump Speed effect is applied on
+     * @param id inapplicable to the Jump Speed effect
+     * @param magnitude the multiplier applied to jump height
+     * @param duration the duration for which the Jump Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

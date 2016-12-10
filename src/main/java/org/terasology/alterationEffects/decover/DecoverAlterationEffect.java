@@ -33,12 +33,12 @@ public class DecoverAlterationEffect implements AlterationEffect {
     }
 
     /**
-     * This applies the decover effect on the entity
+     * Applies the Decover effect on the entity
      *
-     * @param instigator the entity who applied the decover effect
-     * @param entity the entity the decover effect is applied on
-     * @param magnitude inapplicable to the decover effect
-     * @param duration the duration for which the decover effect lasts
+     * @param instigator the entity which applied the Decover effect
+     * @param entity the entity the Decover effect is applied on
+     * @param magnitude inapplicable to the Decover effect
+     * @param duration the duration for which the Decover effect lasts
      */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
@@ -51,6 +51,15 @@ public class DecoverAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
     }
 
+    /**
+     * Applies the Decover effect on the entity - entity cannot be healed by any source
+     *
+     * @param instigator the entity which applied the Decover effect
+     * @param entity the entity the Decover effect is applied on
+     * @param id inapplicable to the Decover effect
+     * @param magnitude inapplicable to the Decover effect
+     * @param duration the duration for which the Decover effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

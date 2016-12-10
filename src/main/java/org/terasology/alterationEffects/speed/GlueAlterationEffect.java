@@ -29,6 +29,14 @@ public class GlueAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Glue effect on the entity - they move 10% slower and are unable to jump
+     *
+     * @param instigator the entity which applied the Glue effect
+     * @param entity the entity the Glue effect is applied on
+     * @param magnitude inapplicable to the Glue effect
+     * @param duration the duration for which the Glue effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -48,6 +56,15 @@ public class GlueAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.GLUE, duration);
     }
 
+    /**
+     * Applies the Glue effect on the entity - they move 10% slower and are unable to jump
+     *
+     * @param instigator the entity which applied the Glue effect
+     * @param entity the entity the Glue effect is applied on
+     * @param id inapplicable to the Glue effect
+     * @param magnitude inapplicable to the Glue effect
+     * @param duration the duration for which the Glue effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

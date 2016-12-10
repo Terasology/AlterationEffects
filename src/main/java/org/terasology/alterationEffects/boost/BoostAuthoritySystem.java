@@ -42,6 +42,13 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     @In
     private EntityManager entityManager;
 
+    /**
+     * Removes the Health Boost effect from the entity and ensures that their current health does not exceed their maximum health
+     *
+     * @param event the event corresponding to the removal of the Health Boost effect
+     * @param entity the entity affected by the HealthBoost effect
+     * @param hBoost the HealthBoostComponent on the entity affected by the Health Boost effect
+     */
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);

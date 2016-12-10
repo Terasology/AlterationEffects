@@ -55,6 +55,12 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         effectComponents.put(AlterationEffects.GLUE, GlueComponent.class);
     }
 
+    /**
+     * Removes the effect from the entity after the duration has passed
+     *
+     * @param event the event corresponding to the Delayed Action called by the effect
+     * @param entity the entity affected by the effect
+     */
     @ReceiveEvent
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
         final String actionId = event.getActionId();

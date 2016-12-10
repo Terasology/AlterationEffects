@@ -29,6 +29,14 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Walk Speed effect on the entity - affects the walking speed of the entity
+     *
+     * @param instigator the entity which applied the Walk Speed effect
+     * @param entity the entity the Walk Speed effect is applied on
+     * @param magnitude the multiplier applied to the walking speed
+     * @param duration the duration for which the Walk Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -48,6 +56,14 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
     }
 
+    /**
+     * Applies the Walk Speed effect on the entity - affects the walking speed of the entity
+     *
+     * @param instigator the entity which applied the Walk Speed effect
+     * @param entity the entity the Walk Speed effect is applied on
+     * @param magnitude the multiplier applied to the walking speed
+     * @param duration the duration for which the Walk Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

@@ -29,6 +29,14 @@ public class MultiJumpAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Multi Jump effect on the entity - gives the ability to jump in mid-air
+     *
+     * @param instigator the entity which applied the Multi Jump effect
+     * @param entity the entity the Multi Jump effect is applied on
+     * @param magnitude the number of times the entity can jump in mid-air without landing
+     * @param duration the duration for which the Multi Jump effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -51,6 +59,15 @@ public class MultiJumpAlterationEffect implements AlterationEffect {
                 AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MULTI_JUMP, duration);
     }
 
+    /**
+     * Applies the Multi Jump effect on the entity - gives the ability to jump in mid-air
+     *
+     * @param instigator the entity which applied the Multi Jump effect
+     * @param entity the entity the Multi Jump effect is applied on
+     * @param id inapplicable to the Multi Jump effect
+     * @param magnitude the number of times the entity can jump in mid-air without landing
+     * @param duration the duration for which the Multi Jump effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

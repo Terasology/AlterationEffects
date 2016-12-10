@@ -29,6 +29,14 @@ public class SwimSpeedAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Swim Speed effect on the entity - affects the swimming speed of the entity
+     *
+     * @param instigator the entity which applied the Swim Speed effect
+     * @param entity the entity the Swim Speed effect is applied on
+     * @param magnitude the multiplier applied to the swimming speed
+     * @param duration the duration for which the Swim Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         boolean add = false;
@@ -48,6 +56,15 @@ public class SwimSpeedAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.SWIM_SPEED, duration);
     }
 
+    /**
+     * Applies the Swim Speed effect on the entity - affects the swimming speed of the entity
+     *
+     * @param instigator the entity which applied the Swim Speed effect
+     * @param entity the entity the Swim Speed effect is applied on
+     * @param id inapplicable to the Swim Speed effect
+     * @param magnitude the multiplier applied to the swimming speed
+     * @param duration the duration for which the Swim Speed effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

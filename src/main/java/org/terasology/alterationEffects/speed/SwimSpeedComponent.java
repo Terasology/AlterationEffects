@@ -18,5 +18,8 @@ package org.terasology.alterationEffects.speed;
 import org.terasology.entitySystem.Component;
 
 public class SwimSpeedComponent implements Component {
+    /**
+     * the multiplier applied to the swimming speed
+     */
     public float multiplier;
 }

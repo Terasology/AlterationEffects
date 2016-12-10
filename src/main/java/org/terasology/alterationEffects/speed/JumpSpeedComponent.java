@@ -20,6 +20,9 @@ import org.terasology.entitySystem.Component;
 
 public class JumpSpeedComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+    /**
+     * the multiplier applied to jump height
+     */
     public float multiplier;
 }
 

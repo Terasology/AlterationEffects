@@ -33,6 +33,14 @@ public class RegenerationAlterationEffect implements AlterationEffect {
         this.delayManager = context.get(DelayManager.class);
     }
 
+    /**
+     * Applies the Regeneration effect on the entity - they regain health at regular intervals
+     *
+     * @param instigator the entity which applied the Regeneration effect
+     * @param entity the entity the Regeneration effect is applied on
+     * @param magnitude the amount of health which the entity regains at each interval
+     * @param duration the duration for which the Regeneration effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
@@ -50,6 +58,15 @@ public class RegenerationAlterationEffect implements AlterationEffect {
         delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
     }
 
+    /**
+     * Applies the Regeneration effect on the entity - they regain health at regular intervals
+     *
+     * @param instigator the entity which applied the Regeneration effect
+     * @param entity the entity the Regeneration effect is applied on
+     * @param id inapplicable to the Regeneration effect
+     * @param magnitude the amount of health which the entity regains at each interval
+     * @param duration the duration for which the Regeneration effect lasts
+     */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);

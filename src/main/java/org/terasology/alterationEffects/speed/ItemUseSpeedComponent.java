@@ -18,6 +18,9 @@ import org.terasology.entitySystem.Component;
 
 public class ItemUseSpeedComponent implements Component {
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+    /**
+     * the multiplier applied to item cooldowns
+     */
     public float multiplier;
 }
 

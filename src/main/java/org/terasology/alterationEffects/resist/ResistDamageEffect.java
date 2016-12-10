@@ -19,7 +19,13 @@ import org.terasology.reflection.MappedContainer;
 
 @MappedContainer
 public class ResistDamageEffect {
+    /**
+     * the amount that damage is reduced each time
+     */
     public int resistAmount;
     public long lastDamageTime;
+    /**
+     * the type of damage that is reduced
+     */
     public String resistType;
 }
