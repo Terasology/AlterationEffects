@@ -65,6 +65,8 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
 
         entity.saveComponent(dot);
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
+        }
     }
 }

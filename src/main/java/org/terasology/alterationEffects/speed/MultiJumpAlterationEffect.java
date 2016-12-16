@@ -47,8 +47,9 @@ public class MultiJumpAlterationEffect implements AlterationEffect {
             entity.saveComponent(multiJump);
         }
 
-        delayManager.addDelayedAction(entity,
-                AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MULTI_JUMP, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity,AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MULTI_JUMP, duration);
+        }
     }
 
     @Override

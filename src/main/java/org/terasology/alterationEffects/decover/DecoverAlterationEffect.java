@@ -48,7 +48,9 @@ public class DecoverAlterationEffect implements AlterationEffect {
             entity.addComponent(decover);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
+        }
     }
 
     @Override

@@ -45,7 +45,9 @@ public class SwimSpeedAlterationEffect implements AlterationEffect {
             entity.saveComponent(swimSpeed);
         }
 
-        delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.SWIM_SPEED, duration);
+        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.SWIM_SPEED, duration);
+        }
     }
 
     @Override

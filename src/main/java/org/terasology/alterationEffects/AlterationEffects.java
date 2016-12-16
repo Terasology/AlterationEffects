@@ -16,6 +16,7 @@
 package org.terasology.alterationEffects;
 
 public final class AlterationEffects {
+    public static final int DURATION_INDEFINITE = -1;
     public static final String EXPIRE_TRIGGER_PREFIX = "AlterationEffects:Expire:";
 
     public static final String WALK_SPEED = "WalkSpeed";
