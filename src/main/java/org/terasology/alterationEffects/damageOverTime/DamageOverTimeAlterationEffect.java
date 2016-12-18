@@ -69,4 +69,9 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
         }
     }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
+
+    }
 }

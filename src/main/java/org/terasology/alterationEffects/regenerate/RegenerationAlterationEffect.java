@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -47,7 +48,22 @@ public class RegenerationAlterationEffect implements AlterationEffect {
             entity.addComponent(regeneration);
         }
 
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                regeneration.regenerationAmount = (int) modifiedMagnitude;
+            }
+
+            //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
+        }
+
+        if (modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
         }
     }
@@ -55,5 +71,10 @@ public class RegenerationAlterationEffect implements AlterationEffect {
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);
+    }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
+
     }
 }

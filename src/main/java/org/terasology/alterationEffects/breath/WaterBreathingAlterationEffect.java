@@ -45,4 +45,9 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);
     }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
+
+    }
 }

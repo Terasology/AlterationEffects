@@ -67,4 +67,9 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE + ":" + id, duration);
         }
     }
+
+    @Override
+    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
+
+    }
 }
