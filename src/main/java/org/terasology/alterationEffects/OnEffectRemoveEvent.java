@@ -38,7 +38,8 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
     private EntityRef entity;
 
     private AlterationEffect alterationEffect;
-    private String id;
+    private String id = "";          // Used to distinguish different effects under the same parent type. Like DOT ones.
+    private String effectID = "";    // Used to identify effects.
 
     private float baseMagnitude = 0f;
 
@@ -72,12 +73,30 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
         this.id = id;
     }
 
+    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String effectID, String id) {
+        this.instigator = instigator;
+        this.entity = entity;
+        this.alterationEffect = alterationEffect;
+        this.effectID = effectID;
+        this.id = id;
+    }
+
     public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String id) {
         this.instigator = instigator;
         this.entity = entity;
         this.baseMagnitude = baseMagnitude;
         this.baseDuration = baseDuration;
         this.alterationEffect = alterationEffect;
+        this.id = id;
+    }
+
+    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String effectID, String id) {
+        this.instigator = instigator;
+        this.entity = entity;
+        this.baseMagnitude = baseMagnitude;
+        this.baseDuration = baseDuration;
+        this.alterationEffect = alterationEffect;
+        this.effectID = effectID;
         this.id = id;
     }
 
@@ -97,6 +116,10 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
 
     public AlterationEffect getAlterationEffect() {
         return alterationEffect;
+    }
+
+    public String getEffectId() {
+        return effectID;
     }
 
     public String getId() {

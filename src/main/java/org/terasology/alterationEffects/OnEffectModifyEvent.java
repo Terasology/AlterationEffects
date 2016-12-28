@@ -47,7 +47,8 @@ public class OnEffectModifyEvent implements ConsumableEvent {
 
     private long baseDuration = 0;
 
-    private long shortestDuration = 0;
+    private long shortestDuration = Long.MAX_VALUE;
+    private String effectIDWithShortestDuration = "";
 
     /** A list of all the multipliers for this potion effect's magnitude. */
     private TFloatList magnitudeMultipliers = new TFloatArrayList();
@@ -139,6 +140,10 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         return durationModifiers;
     }
 
+    public String getEffectIDWithShortestDuration() {
+        return effectIDWithShortestDuration;
+    }
+
     /**
      * Add a multiplier to the magnitude multipliers list.
      *
@@ -174,6 +179,23 @@ public class OnEffectModifyEvent implements ConsumableEvent {
     public void addDuration(double amount) {
         if (amount < shortestDuration) {
             shortestDuration = (long) amount;
+
+            if (shortestDuration < 0) {
+                shortestDuration = 0;
+            }
+        }
+        durationModifiers.add(amount);
+    }
+
+    /**
+     * Add a (pre)modifier to the duration (pre)modifiers list.
+     *
+     * @param amount    The value of the modifier to add to the list.
+     */
+    public void addDuration(double amount, String effectID) {
+        if (amount < shortestDuration) {
+            shortestDuration = (long) amount;
+            effectIDWithShortestDuration = effectID;
 
             if (shortestDuration < 0) {
                 shortestDuration = 0;

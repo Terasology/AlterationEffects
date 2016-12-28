@@ -53,6 +53,7 @@ import org.terasology.registry.In;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @RegisterSystem
 public class EffectsAuthoritySystem extends BaseComponentSystem {
@@ -99,12 +100,20 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
         final String actionId = event.getActionId();
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
-            String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            String[] parts = effectNamePlusID.split(Pattern.quote("|"), 2);
+
+            String effectID = "";
+            if (parts.length == 2) {
+                effectID = parts[1];
+            }
+
+            String effectName = parts[0]; //actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
             final Class<? extends Component> component = effectComponents.get(effectName);
             if (component != null) {
                 entity.removeComponent(component);
 
-                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), ""));
+                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, ""));
                 alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
             }
         }

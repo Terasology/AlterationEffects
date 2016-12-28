@@ -36,6 +36,8 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
+        //applyEffect(instigator, entity, "", "", magnitude, duration);
+
         RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
         if (regeneration == null) {
             regeneration = new RegenerationComponent();
@@ -63,9 +65,11 @@ public class RegenerationAlterationEffect implements AlterationEffect {
             //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
         }
 
-        if (modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
         }
+
     }
 
     @Override
@@ -75,6 +79,35 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
+        RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
+        if (regeneration == null) {
+            regeneration = new RegenerationComponent();
+            regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
+            regeneration.lastRegenerationTime = time.getGameTimeInMs();
+            entity.addComponent(regeneration);
+        } else {
+            regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
+            regeneration.lastRegenerationTime = time.getGameTimeInMs();
+            entity.addComponent(regeneration);
+        }
 
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                regeneration.regenerationAmount = (int) modifiedMagnitude;
+            }
+
+            //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
+        }
     }
 }
