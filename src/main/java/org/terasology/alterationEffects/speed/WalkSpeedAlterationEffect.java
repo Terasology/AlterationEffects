@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
@@ -31,6 +32,36 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
+        WalkSpeedComponent walkSpeed = entity.getComponent(WalkSpeedComponent.class);
+        if (walkSpeed == null) {
+            walkSpeed = new WalkSpeedComponent();
+            walkSpeed.multiplier = magnitude;
+            entity.addComponent(walkSpeed);
+        } else {
+            walkSpeed.multiplier = magnitude;
+            entity.saveComponent(walkSpeed);
+        }
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                walkSpeed.multiplier = modifiedMagnitude;
+            }
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED + "|" + effectID, modifiedDuration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(WalkSpeedComponent.class);
+        }
+
+        /*
         boolean add = false;
         WalkSpeedComponent walkSpeed = entity.getComponent(WalkSpeedComponent.class);
         if (walkSpeed == null) {
@@ -48,6 +79,7 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
         }
+        */
     }
 
     @Override

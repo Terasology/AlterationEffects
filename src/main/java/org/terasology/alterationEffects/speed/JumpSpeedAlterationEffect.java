@@ -17,9 +17,12 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
+import org.terasology.alterationEffects.regenerate.RegenerationComponent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
+import org.terasology.math.TeraMath;
 
 public class JumpSpeedAlterationEffect implements AlterationEffect {
 
@@ -31,6 +34,17 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
+        JumpSpeedComponent jumpSpeed = entity.getComponent(JumpSpeedComponent.class);
+        if (jumpSpeed == null) {
+            jumpSpeed = new JumpSpeedComponent();
+            jumpSpeed.multiplier = magnitude;
+            entity.addComponent(jumpSpeed);
+        } else {
+            jumpSpeed.multiplier = magnitude;
+            entity.saveComponent(jumpSpeed);
+        }
+
+        /*
         boolean add = false;
         JumpSpeedComponent jumpSpeed = entity.getComponent(JumpSpeedComponent.class);
 
@@ -38,7 +52,21 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
             add = true;
             jumpSpeed = new JumpSpeedComponent();
         }
+        */
 
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                jumpSpeed.multiplier = modifiedMagnitude;
+            }
+        }
+
+        /*
         jumpSpeed.multiplier = magnitude;
 
         if (add) {
@@ -46,9 +74,18 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
         } else {
             entity.saveComponent(jumpSpeed);
         }
+        */
 
+        /*
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity,AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED, duration);
+        }
+        */
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED + "|" + effectID, modifiedDuration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(JumpSpeedComponent.class);
         }
     }
 

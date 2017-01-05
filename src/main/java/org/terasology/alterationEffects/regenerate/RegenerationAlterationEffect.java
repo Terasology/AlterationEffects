@@ -50,16 +50,18 @@ public class RegenerationAlterationEffect implements AlterationEffect {
             entity.addComponent(regeneration);
         }
 
-
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
+        // If the effect modify event is consumed, don't apply this alteration effect.
         if (!effectModifyEvent.isConsumed()) {
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
             modifiedDuration = effectModifyEvent.getShortestDuration();
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 regeneration.regenerationAmount = (int) modifiedMagnitude;
+                modifiersFound = true;
             }
 
             //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
@@ -67,7 +69,11 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, modifiedDuration);
+        } else if (!modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(RegenerationComponent.class);
         }
 
     }
@@ -91,7 +97,6 @@ public class RegenerationAlterationEffect implements AlterationEffect {
             entity.addComponent(regeneration);
         }
 
-
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
 
@@ -108,6 +113,8 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(RegenerationComponent.class);
         }
     }
 }

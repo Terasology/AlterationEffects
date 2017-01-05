@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
@@ -31,6 +32,35 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
+        ItemUseSpeedComponent itemUseSpeed = entity.getComponent(ItemUseSpeedComponent.class);
+        if (itemUseSpeed == null) {
+            itemUseSpeed = new ItemUseSpeedComponent();
+            itemUseSpeed.multiplier = magnitude;
+            entity.addComponent(itemUseSpeed);
+        } else {
+            itemUseSpeed.multiplier = magnitude;
+            entity.saveComponent(itemUseSpeed);
+        }
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                itemUseSpeed.multiplier = modifiedMagnitude;
+            }
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED + "|" + effectID, modifiedDuration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(ItemUseSpeedComponent.class);
+        }
+        /*
         boolean add = false;
         ItemUseSpeedComponent jumpSpeed = entity.getComponent(ItemUseSpeedComponent.class);
 
@@ -50,6 +80,7 @@ public class ItemUseSpeedAlterationEffect implements AlterationEffect {
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity,AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.ITEM_USE_SPEED, duration);
         }
+        */
     }
 
     @Override

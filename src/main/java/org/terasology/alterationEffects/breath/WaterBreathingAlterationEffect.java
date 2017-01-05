@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.breath;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
@@ -31,14 +32,39 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
-        final WaterBreathingComponent component = entity.getComponent(WaterBreathingComponent.class);
-        if (component == null) {
-            entity.saveComponent(new WaterBreathingComponent());
+        WaterBreathingComponent waterBreathing = entity.getComponent(WaterBreathingComponent.class);
+        if (waterBreathing == null) {
+            waterBreathing = new WaterBreathingComponent();
+            entity.addComponent(waterBreathing);
         }
 
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
+        long modifiedDuration = 0;
+        boolean modifiersFound = false;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                modifiersFound = true;
+            }
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING + "|" + effectID, modifiedDuration);
+        } else if (!modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            entity.removeComponent(WaterBreathingComponent.class);
+        }
+
+        /*
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
         }
+        */
     }
 
     @Override
