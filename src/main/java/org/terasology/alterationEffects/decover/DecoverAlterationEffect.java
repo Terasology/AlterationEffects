@@ -52,24 +52,24 @@ public class DecoverAlterationEffect implements AlterationEffect {
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
-            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
             modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                modifiersFound = true;
+            }
         }
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(DecoverComponent.class);
         }
-
-        /*
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DECOVER, duration);
-        }
-        */
     }
 
     @Override

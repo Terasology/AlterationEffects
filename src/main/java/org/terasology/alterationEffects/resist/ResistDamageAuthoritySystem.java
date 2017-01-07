@@ -17,10 +17,13 @@ package org.terasology.alterationEffects.resist;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectRemoveEvent;
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
 import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
 import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
+import org.terasology.context.Context;
 import org.terasology.engine.Time;
+import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -35,6 +38,8 @@ import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
 import org.terasology.utilities.Assets;
 
+import java.util.regex.Pattern;
+
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     private static final int CHECK_INTERVAL = 100;
@@ -46,9 +51,12 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     private Time time;
     @In
     private EntityManager entityManager;
+    @In
+    private Context context;
 
     @ReceiveEvent
     public void expireResistDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, ResistDamageComponent component) {
+        /*
         final String actionId = event.getActionId();
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
             String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
@@ -60,6 +68,38 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
 
             if (split[2].equalsIgnoreCase(AlterationEffects.RESIST_DAMAGE)) {
                 component.rdes.remove(split[3]);
+
+                if (component.rdes.size() == 0 && component != null) {
+                    entity.removeComponent(ResistDamageComponent.class);
+                }
+            }
+        }
+        */
+
+        final String actionId = event.getActionId();
+        if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
+            String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            String[] parts = effectNamePlusID.split(Pattern.quote("|"), 2);
+
+            String effectID = "";
+            String damageID = "";
+            // Parts[0] contains the name of the AlterationEffect and the id, and parts[1] contains the effectID.
+            if (parts.length == 2) {
+                damageID = parts[0].split(":")[1];
+                effectID = parts[1];
+            }
+
+            String[] split = actionId.split(":");
+            if (split.length != 4) {
+                return;
+            }
+
+            if (split[2].equalsIgnoreCase(AlterationEffects.RESIST_DAMAGE)) {
+                component.rdes.remove(damageID);
+
+                ResistDamageAlterationEffect resistDamageAlterationEffect = new ResistDamageAlterationEffect(context);
+                entity.send(new OnEffectRemoveEvent(entity, entity, resistDamageAlterationEffect, effectID, damageID));
+                resistDamageAlterationEffect.applyEffect(entity, entity, damageID, 0, 0);
 
                 if (component.rdes.size() == 0 && component != null) {
                     entity.removeComponent(ResistDamageComponent.class);

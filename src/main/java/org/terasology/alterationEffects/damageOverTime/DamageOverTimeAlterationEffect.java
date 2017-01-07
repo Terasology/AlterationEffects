@@ -17,11 +17,16 @@ package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
+import org.terasology.alterationEffects.speed.WalkSpeedComponent;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DamageOverTimeAlterationEffect implements AlterationEffect {
 
@@ -48,9 +53,55 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
         } else {
             dot.damageAmount = TeraMath.floorToInt(magnitude);
             dot.lastDamageTime = time.getGameTimeInMs();
-            entity.addComponent(dot);
+            entity.saveComponent(dot);
         }
 
+        DamageOverTimeEffect dotEffect = new DamageOverTimeEffect();
+        dotEffect.damageAmount = TeraMath.floorToInt(magnitude);
+        dotEffect.lastDamageTime = time.getGameTimeInMs();
+        // TODO: Temporary until more damage prefabs are added.
+        dotEffect.damageType = "AlterationEffects:PoisonDamage";
+
+        if (dot.dots.get(id) == null) {
+            dot.dots.put(id, dotEffect);
+        } else {
+            dot.dots.replace(id, dotEffect);
+        }
+
+        entity.saveComponent(dot);
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, id));
+        long modifiedDuration = 0;
+        boolean modifiersFound = false;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                dotEffect.damageAmount = (int) modifiedMagnitude;
+                modifiersFound = true;
+            }
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+
+            if (dot.effectIDMap.get(id) == null) {
+                dot.effectIDMap.put(id, new HashMap<String, Boolean>());
+            }
+            dot.effectIDMap.get(id).put(effectID, true);
+
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME
+                    + ":" + id + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME
+                    + ":" + id, duration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            dot.dots.remove(id, dotEffect);
+            //entity.removeComponent(WalkSpeedComponent.class);
+        }
+        /*
         DamageOverTimeEffect dotEffect = new DamageOverTimeEffect();
         dotEffect.damageAmount = TeraMath.floorToInt(magnitude);
         dotEffect.lastDamageTime = time.getGameTimeInMs();
@@ -68,6 +119,7 @@ public class DamageOverTimeAlterationEffect implements AlterationEffect {
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME + ":" + id, duration);
         }
+        */
     }
 
     @Override

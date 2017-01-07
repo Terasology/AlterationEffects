@@ -19,6 +19,7 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DamageOverTimeComponent implements Component {
@@ -26,4 +27,5 @@ public class DamageOverTimeComponent implements Component {
     public long lastDamageTime;
     public String source;
     public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();
+    public Map<String, Map<String, Boolean>> effectIDMap = new HashMap<String, Map<String, Boolean>>();
 }

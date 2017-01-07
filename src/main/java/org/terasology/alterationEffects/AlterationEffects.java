@@ -34,6 +34,8 @@ public final class AlterationEffects {
 
     public static final String MAX_HEALTH_BOOST = "MaxHealthBoost";
 
+    public static final String CONSUMABLE_ITEM = "ConsumableItem";
+
     private AlterationEffects() {
     }
 }

@@ -16,6 +16,8 @@
 package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectRemoveEvent;
+import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -32,6 +34,9 @@ import org.terasology.logic.health.HealthComponent;
 import org.terasology.registry.In;
 import org.terasology.utilities.Assets;
 
+import java.util.HashMap;
+import java.util.regex.Pattern;
+
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implements UpdateSubscriberSystem {
     private static final int CHECK_INTERVAL = 100;
@@ -43,9 +48,47 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
     private Time time;
     @In
     private EntityManager entityManager;
+    @In
+    private Context context;
 
     @ReceiveEvent
     public void expireDOTEffect(DelayedActionTriggeredEvent event, EntityRef entity, DamageOverTimeComponent component) {
+        final String actionId = event.getActionId();
+        if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
+            String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            String[] parts = effectNamePlusID.split(Pattern.quote("|"), 2);
+
+            String effectID = "";
+            String damageID = "";
+            // Parts[0] contains the name of the AlterationEffect and the id, and parts[1] contains the effectID.
+            if (parts.length == 2) {
+                damageID = parts[0].split(":")[1];
+                effectID = parts[1];
+            }
+
+            String[] split = actionId.split(":");
+            if (split.length != 4) {
+                return;
+            }
+
+            if (split[2].equalsIgnoreCase(AlterationEffects.DAMAGE_OVER_TIME)) {
+                component.dots.remove(damageID);
+
+                if (component.effectIDMap.get(damageID) != null) {
+                    component.effectIDMap.get(damageID).remove(effectID);
+                }
+
+                DamageOverTimeAlterationEffect dotAlterationEffect = new DamageOverTimeAlterationEffect(context);
+                entity.send(new OnEffectRemoveEvent(entity, entity, dotAlterationEffect, effectID, damageID));
+                dotAlterationEffect.applyEffect(entity, entity, damageID, 0, 0);
+
+                if (component.dots.size() == 0 && component != null) {
+                    entity.removeComponent(DamageOverTimeComponent.class);
+                }
+            }
+        }
+
+        /*
         final String actionId = event.getActionId();
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
             String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
@@ -63,6 +106,7 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
                 }
             }
         }
+        */
     }
 
     @Override

@@ -44,6 +44,7 @@ public class GlueAlterationEffect implements AlterationEffect {
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
@@ -51,35 +52,18 @@ public class GlueAlterationEffect implements AlterationEffect {
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 glue.multiplier = modifiedMagnitude;
+                modifiersFound = true;
             }
         }
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.GLUE + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.GLUE, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(GlueComponent.class);
         }
-
-        /*
-        boolean add = false;
-        GlueComponent glue = entity.getComponent(GlueComponent.class);
-        if (glue == null) {
-            add = true;
-            glue = new GlueComponent();
-        }
-        glue.multiplier = magnitude;
-
-        if (add) {
-            entity.addComponent(glue);
-        } else {
-            entity.saveComponent(glue);
-        }
-
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.GLUE, duration);
-        }
-        */
     }
 
     @Override

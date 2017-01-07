@@ -43,7 +43,6 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
         boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
-            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
             modifiedDuration = effectModifyEvent.getShortestDuration();
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
@@ -54,17 +53,11 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING + "|" + effectID, modifiedDuration);
-        } else if (!modifiersFound && !effectModifyEvent.isConsumed()) {
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(WaterBreathingComponent.class);
         }
-
-        /*
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
-        }
-        */
     }
 
     @Override

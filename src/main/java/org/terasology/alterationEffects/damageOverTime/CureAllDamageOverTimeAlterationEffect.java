@@ -17,11 +17,14 @@ package org.terasology.alterationEffects.damageOverTime;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectRemoveEvent;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
+
+import java.util.Map;
 
 public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
 
@@ -37,8 +40,21 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         DamageOverTimeComponent dot = entity.getComponent(DamageOverTimeComponent.class);
         if (dot != null) {
+            // Cure all sources of this type of DOT.
+            for (Map.Entry<String, Map<String, Boolean>> dotType : dot.effectIDMap.entrySet()) {
+                for (Map.Entry<String, Boolean> dotSource : dotType.getValue().entrySet()) {
+                    delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX +
+                            AlterationEffects.DAMAGE_OVER_TIME + ":" + dotType.getKey() + "|" + dotSource.getKey());
+                }
+
+                // Send an event to remove the temporary source effects that caused this DOT effect. This is intended to
+                // remove temporary effects like from potions, but not from equipment or more permanent sources.
+                entity.send(new OnEffectRemoveEvent(entity, entity, this, AlterationEffects.CONSUMABLE_ITEM, dotType.getKey()));
+            }
+            //dot.effectIDMap.remove(id);
+
             entity.removeComponent(DamageOverTimeComponent.class);
-            delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME);
+            //delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME);
         }
     }
 

@@ -56,6 +56,7 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
@@ -63,27 +64,15 @@ public class JumpSpeedAlterationEffect implements AlterationEffect {
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 jumpSpeed.multiplier = modifiedMagnitude;
+                modifiersFound = true;
             }
         }
 
-        /*
-        jumpSpeed.multiplier = magnitude;
-
-        if (add) {
-            entity.addComponent(jumpSpeed);
-        } else {
-            entity.saveComponent(jumpSpeed);
-        }
-        */
-
-        /*
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity,AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED, duration);
-        }
-        */
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.JUMP_SPEED, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(JumpSpeedComponent.class);
         }

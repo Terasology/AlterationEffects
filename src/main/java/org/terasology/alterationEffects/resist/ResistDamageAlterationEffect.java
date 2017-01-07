@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.resist;
 
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
+import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.alterationEffects.damageOverTime.DamageOverTimeComponent;
 import org.terasology.alterationEffects.damageOverTime.DamageOverTimeEffect;
 import org.terasology.context.Context;
@@ -48,6 +49,54 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
             entity.addComponent(dot);
         } else {
             dot.resistAmount = TeraMath.floorToInt(magnitude);
+            entity.saveComponent(dot);
+        }
+
+        ResistDamageEffect resEffect = new ResistDamageEffect();
+        resEffect.resistAmount = TeraMath.floorToInt(magnitude);
+        resEffect.resistType = id;
+
+        if (dot.rdes.get(id) == null) {
+            dot.rdes.put(id, resEffect);
+        } else {
+            dot.rdes.replace(id, resEffect);
+        }
+
+        entity.saveComponent(dot);
+
+        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, id));
+        long modifiedDuration = 0;
+        boolean modifiersFound = false;
+
+        if (!effectModifyEvent.isConsumed()) {
+            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
+            modifiedDuration = effectModifyEvent.getShortestDuration();
+
+            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
+                resEffect.resistAmount = (int) modifiedMagnitude;
+                modifiersFound = true;
+            }
+        }
+
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE
+                    + ":" + id + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE
+                    + ":" + id, duration);
+        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+            dot.rdes.remove(id, resEffect);
+            //entity.removeComponent(WalkSpeedComponent.class);
+        }
+        /*
+        ResistDamageComponent dot = entity.getComponent(ResistDamageComponent.class);
+        if (dot == null) {
+            dot = new ResistDamageComponent();
+            dot.resistAmount = TeraMath.floorToInt(magnitude);
+            entity.addComponent(dot);
+        } else {
+            dot.resistAmount = TeraMath.floorToInt(magnitude);
             entity.addComponent(dot);
         }
 
@@ -66,6 +115,7 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
         if (duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE + ":" + id, duration);
         }
+        */
     }
 
     @Override

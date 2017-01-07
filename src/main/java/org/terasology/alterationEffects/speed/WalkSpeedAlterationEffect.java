@@ -44,6 +44,7 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
@@ -51,35 +52,18 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 walkSpeed.multiplier = modifiedMagnitude;
+                modifiersFound = true;
             }
         }
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED + "|" + effectID, modifiedDuration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(WalkSpeedComponent.class);
         }
-
-        /*
-        boolean add = false;
-        WalkSpeedComponent walkSpeed = entity.getComponent(WalkSpeedComponent.class);
-        if (walkSpeed == null) {
-            add = true;
-            walkSpeed = new WalkSpeedComponent();
-        }
-        walkSpeed.multiplier = magnitude;
-
-        if (add) {
-            entity.addComponent(walkSpeed);
-        } else {
-            entity.saveComponent(walkSpeed);
-        }
-
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
-        }
-        */
     }
 
     @Override

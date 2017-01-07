@@ -47,7 +47,7 @@ public class RegenerationAlterationEffect implements AlterationEffect {
         } else {
             regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
             regeneration.lastRegenerationTime = time.getGameTimeInMs();
-            entity.addComponent(regeneration);
+            entity.saveComponent(regeneration);
         }
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
@@ -63,8 +63,6 @@ public class RegenerationAlterationEffect implements AlterationEffect {
                 regeneration.regenerationAmount = (int) modifiedMagnitude;
                 modifiersFound = true;
             }
-
-            //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
         }
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
