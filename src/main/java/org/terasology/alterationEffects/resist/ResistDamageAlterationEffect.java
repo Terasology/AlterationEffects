@@ -85,37 +85,9 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
         } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE
                     + ":" + id, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+        } else if (!modifiersFound || !effectModifyEvent.getHasInfDuration()) {
             dot.rdes.remove(id, resEffect);
-            //entity.removeComponent(WalkSpeedComponent.class);
         }
-        /*
-        ResistDamageComponent dot = entity.getComponent(ResistDamageComponent.class);
-        if (dot == null) {
-            dot = new ResistDamageComponent();
-            dot.resistAmount = TeraMath.floorToInt(magnitude);
-            entity.addComponent(dot);
-        } else {
-            dot.resistAmount = TeraMath.floorToInt(magnitude);
-            entity.addComponent(dot);
-        }
-
-        ResistDamageEffect resEffect = new ResistDamageEffect();
-        resEffect.resistAmount = TeraMath.floorToInt(magnitude);
-        resEffect.resistType = id;
-
-        if (dot.rdes.get(id) == null) {
-            dot.rdes.put(id, resEffect);
-        } else {
-            dot.rdes.replace(id, resEffect);
-        }
-
-        entity.saveComponent(dot);
-
-        if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.RESIST_DAMAGE + ":" + id, duration);
-        }
-        */
     }
 
     @Override

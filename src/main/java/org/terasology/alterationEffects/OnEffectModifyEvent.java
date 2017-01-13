@@ -40,15 +40,29 @@ public class OnEffectModifyEvent implements ConsumableEvent {
     /** A reference to the entity being affected this by effect. */
     private EntityRef entity;
 
+    /** Reference to the original alteration effect that spawned this effect. */
     private AlterationEffect alterationEffect;
+
+    /** Used to distinguish different effects under the same parent type. Like DOT or Resist ones. */
     private String id;
 
+    /** Base magnitude of this effect. */
     private float baseMagnitude = 0f;
 
+    /** Base duration of this effect. */
     private long baseDuration = 0;
 
+    /** The current shortest duration of all the effects of this same type that are currently running. */
     private long shortestDuration = Long.MAX_VALUE;
+
+    /** ID of the item or entity that has the current shortest duration left for its effect being applied. */
     private String effectIDWithShortestDuration = "";
+
+    private boolean hasInfDuration = false;
+    private String effectIDWithInfiniteDuration = "";
+
+    private boolean hasZeroDuration = false;
+    private String effectIDWithZeroDuration = "";
 
     /** A list of all the multipliers for this potion effect's magnitude. */
     private TFloatList magnitudeMultipliers = new TFloatArrayList();
@@ -101,7 +115,11 @@ public class OnEffectModifyEvent implements ConsumableEvent {
     }
 
     public long getShortestDuration() {
-        return shortestDuration;
+        if (hasZeroDuration) {
+            return 0;
+        } else {
+            return shortestDuration;
+        }
     }
 
     /**
@@ -141,7 +159,19 @@ public class OnEffectModifyEvent implements ConsumableEvent {
     }
 
     public String getEffectIDWithShortestDuration() {
-        return effectIDWithShortestDuration;
+        if (hasZeroDuration) {
+            return effectIDWithZeroDuration;
+        } else {
+            return effectIDWithShortestDuration;
+        }
+    }
+
+    public String getEffectIDWithInfiniteDuration() {
+        return effectIDWithInfiniteDuration;
+    }
+
+    public boolean getHasInfDuration() {
+        return hasInfDuration;
     }
 
     /**
@@ -194,11 +224,15 @@ public class OnEffectModifyEvent implements ConsumableEvent {
      */
     public void addDuration(double amount, String effectID) {
         if (amount < shortestDuration) {
-            shortestDuration = (long) amount;
-            effectIDWithShortestDuration = effectID;
-
-            if (shortestDuration < 0) {
-                shortestDuration = 0;
+            if (amount < 0) {
+                hasInfDuration = true;
+                effectIDWithInfiniteDuration = effectID;
+            } else if (amount == 0) {
+                hasZeroDuration = true;
+                effectIDWithZeroDuration = effectID;
+            } else {
+                shortestDuration = (long) amount;
+                effectIDWithShortestDuration = effectID;
             }
         }
         durationModifiers.add(amount);

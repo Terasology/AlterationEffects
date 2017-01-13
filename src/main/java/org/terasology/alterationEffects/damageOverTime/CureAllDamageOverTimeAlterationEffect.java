@@ -30,8 +30,10 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
+    private Context context;
 
     public CureAllDamageOverTimeAlterationEffect(Context context) {
+        this.context = context;
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
@@ -47,14 +49,19 @@ public class CureAllDamageOverTimeAlterationEffect implements AlterationEffect {
                             AlterationEffects.DAMAGE_OVER_TIME + ":" + dotType.getKey() + "|" + dotSource.getKey());
                 }
 
+                //entity.send(new OnEffectRemoveEvent(entity, entity, this, AlterationEffects.CONSUMABLE_ITEM, dotType.getKey()));
+
                 // Send an event to remove the temporary source effects that caused this DOT effect. This is intended to
                 // remove temporary effects like from potions, but not from equipment or more permanent sources.
-                entity.send(new OnEffectRemoveEvent(entity, entity, this, AlterationEffects.CONSUMABLE_ITEM, dotType.getKey()));
+                DamageOverTimeAlterationEffect dotAlterationEffect = new DamageOverTimeAlterationEffect(context);
+                entity.send(new OnEffectRemoveEvent(entity, entity, dotAlterationEffect, AlterationEffects.CONSUMABLE_ITEM, dotType.getKey()));
+
+                // After removing the temporary DOT effects of this type, call the DOT alteration effect to calculate the new
+                // magnitude and duration.
+                dotAlterationEffect.applyEffect(entity, entity, dotType.getKey(), 0, 0);
             }
-            //dot.effectIDMap.remove(id);
 
             entity.removeComponent(DamageOverTimeComponent.class);
-            //delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.DAMAGE_OVER_TIME);
         }
     }
 

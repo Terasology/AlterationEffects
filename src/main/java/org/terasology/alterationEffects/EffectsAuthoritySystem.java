@@ -113,7 +113,7 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
             if (component != null) {
                 entity.removeComponent(component);
 
-                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, ""));
+                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, "", true));
                 alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
             }
         }

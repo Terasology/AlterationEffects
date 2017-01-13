@@ -87,26 +87,6 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
                 }
             }
         }
-
-        /*
-        final String actionId = event.getActionId();
-        if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
-            String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
-            String[] split = actionId.split(":");
-
-            if (split.length != 4) {
-                return;
-            }
-
-            if (split[2].equalsIgnoreCase(AlterationEffects.DAMAGE_OVER_TIME)) {
-                component.dots.remove(split[3]);
-
-                if (component.dots.size() == 0 && component != null) {
-                    entity.removeComponent(DamageOverTimeComponent.class);
-                }
-            }
-        }
-        */
     }
 
     @Override
@@ -114,20 +94,6 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
         final long currentTime = time.getGameTimeInMs();
         if (currentTime >= lastUpdated + CHECK_INTERVAL) {
             lastUpdated = currentTime;
-
-
-            /*
-            for (EntityRef entity : entityManager.getEntitiesWith(DamageOverTimeComponent.class, HealthComponent.class)) {
-                final DamageOverTimeComponent component = entity.getComponent(DamageOverTimeComponent.class);
-                if (currentTime >= component.lastDamageTime + DAMAGE_TICK) {
-                    int multiplier = (int) (currentTime - component.lastDamageTime) / DAMAGE_TICK;
-                    component.lastDamageTime = component.lastDamageTime + DAMAGE_TICK * multiplier;
-                    entity.saveComponent(component);
-                    entity.send(new DoDamageEvent(component.damageAmount * multiplier,
-                            Assets.getPrefab("AlterationEffects:damageOverTimeDamage").get()));
-                }
-            }
-            */
 
             for (EntityRef entity : entityManager.getEntitiesWith(DamageOverTimeComponent.class, HealthComponent.class)) {
                 final DamageOverTimeComponent component = entity.getComponent(DamageOverTimeComponent.class);

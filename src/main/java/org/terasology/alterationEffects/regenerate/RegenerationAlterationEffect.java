@@ -36,8 +36,6 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
-        //applyEffect(instigator, entity, "", "", magnitude, duration);
-
         RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
         if (regeneration == null) {
             regeneration = new RegenerationComponent();
@@ -50,30 +48,47 @@ public class RegenerationAlterationEffect implements AlterationEffect {
             entity.saveComponent(regeneration);
         }
 
+        // Send out this event to collect all the duration and magnitude modifiers and multipliers that can affect this
+        // effect.
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
-        long modifiedDuration = 0;
-        boolean modifiersFound = false;
+        long modifiedDuration = 0;      // This will keep track of the current modified duration.
+        boolean modifiersFound = false; // This flag will keep track if there were any modifiers collected in the event.
 
         // If the effect modify event is consumed, don't apply this alteration effect.
         if (!effectModifyEvent.isConsumed()) {
+            // Get the magnitude result value and the shortest duration, and assign them to the modifiedMagnitude and
+            // modifiedDuration respectively.
+            // The shortest duration is used as the effect modifier associated with that
+            // will expire in the shortest amount of time, meaning that this effect's total magnitude and next remaining
+            // duration will have to be recalculated.
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
             modifiedDuration = effectModifyEvent.getShortestDuration();
 
+            // If there's at least one duration and magnitude modifier, set the effect's magnitude and the modifiersFound flag.
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 regeneration.regenerationAmount = (int) modifiedMagnitude;
                 modifiersFound = true;
             }
         }
 
-        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+        // If the modified duration is between the accepted values (0 and Long.MAX_VALUE), and the base duration is not infinite,
+        // add a delayed action to the DelayManager using the new system.
+        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE ) {
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, modifiedDuration);
-        } else if (!modifiersFound && !effectModifyEvent.isConsumed()) {
+        }
+        // Otherwise, if the duration is greater than 0, there are no modifiers found, and the effect modify event was not consumed,
+        // add a delayed action to the DelayManager using the old system.
+        else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+        }
+        // Otherwise, if there are either no modifiers found, or none of the modifiers collected in the event have infinite
+        // duration, remove the component associated with this alteration effect.
+        else if (!modifiersFound || !effectModifyEvent.getHasInfDuration()) {
             entity.removeComponent(RegenerationComponent.class);
         }
-
+        // If this point is reached and none of the above if-clauses were met, that means there was at least one modifier
+        // collected in the event which has infinite duration.
     }
 
     @Override
@@ -97,6 +112,7 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
         OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
         long modifiedDuration = 0;
+        boolean modifiersFound = false;
 
         if (!effectModifyEvent.isConsumed()) {
             float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
@@ -104,13 +120,14 @@ public class RegenerationAlterationEffect implements AlterationEffect {
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
                 regeneration.regenerationAmount = (int) modifiedMagnitude;
+                modifiersFound = true;
             }
-
-            //delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, modifiedDuration);
         }
 
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
         } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
             entity.removeComponent(RegenerationComponent.class);
         }

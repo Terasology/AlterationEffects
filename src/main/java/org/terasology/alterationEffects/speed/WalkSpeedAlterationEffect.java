@@ -61,7 +61,7 @@ public class WalkSpeedAlterationEffect implements AlterationEffect {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED + "|" + effectID, modifiedDuration);
         } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WALK_SPEED, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+        } else if (!modifiersFound || !effectModifyEvent.getHasInfDuration()) {
             entity.removeComponent(WalkSpeedComponent.class);
         }
     }

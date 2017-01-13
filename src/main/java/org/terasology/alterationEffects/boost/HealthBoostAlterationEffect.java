@@ -79,7 +79,7 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST + "|" + effectID, modifiedDuration);
         } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+        } else if (!modifiersFound || !effectModifyEvent.getHasInfDuration()) {
             entity.removeComponent(HealthBoostComponent.class);
         }
     }

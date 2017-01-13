@@ -29,8 +29,10 @@ public class CureDamageOverTimeAlterationEffect implements AlterationEffect {
 
     private final Time time;
     private final DelayManager delayManager;
+    private Context context;
 
     public CureDamageOverTimeAlterationEffect(Context context) {
+        this.context = context;
         this.time = context.get(Time.class);
         this.delayManager = context.get(DelayManager.class);
     }
@@ -59,8 +61,14 @@ public class CureDamageOverTimeAlterationEffect implements AlterationEffect {
 
             // Send an event to remove the temporary source effects that caused this DOT effect. This is intended to
             // remove temporary effects like from potions, but not from equipment or more permanent sources.
-            entity.send(new OnEffectRemoveEvent(entity, entity, this, AlterationEffects.CONSUMABLE_ITEM, id));
+            DamageOverTimeAlterationEffect dotAlterationEffect = new DamageOverTimeAlterationEffect(context);
+            entity.send(new OnEffectRemoveEvent(entity, entity, dotAlterationEffect, AlterationEffects.CONSUMABLE_ITEM, id));
 
+            // After removing the temporary DOT effects of this type, call the DOT alteration effect to calculate the new
+            // magnitude and duration.
+            dotAlterationEffect.applyEffect(entity, entity, id, 0, 0);
+
+            // If there are no DOT effects in place, remove the DamageOverTime component from this entity.
             if (dot.dots.isEmpty()) {
                 entity.removeComponent(DamageOverTimeComponent.class);
             }

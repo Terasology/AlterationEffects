@@ -55,7 +55,7 @@ public class WaterBreathingAlterationEffect implements AlterationEffect {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING + "|" + effectID, modifiedDuration);
         } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.WATER_BREATHING, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
+        } else if (!modifiersFound || !effectModifyEvent.getHasInfDuration()) {
             entity.removeComponent(WaterBreathingComponent.class);
         }
     }

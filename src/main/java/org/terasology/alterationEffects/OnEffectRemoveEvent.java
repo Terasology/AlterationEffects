@@ -31,47 +31,44 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
     /** Flags whether this event been consumed or not. */
     private boolean consumed;
 
+    /** Flags whether this effect has expired or not. */
+    private boolean expired = false;
+
     /** The instigator entity that instigated this effect modification. */
     private EntityRef instigator;
 
     /** A reference to the entity being affected this by effect. */
     private EntityRef entity;
 
+    /** Reference to the original alteration effect that spawned this effect. */
     private AlterationEffect alterationEffect;
-    private String id = "";          // Used to distinguish different effects under the same parent type. Like DOT ones.
-    private String effectID = "";    // Used to identify effects.
 
+    /** Used to distinguish different effects under the same parent type. Like DOT or Resist ones. */
+    private String id = "";
+
+    /** Used to identify individual effects. */
+    private String effectID = "";
+
+    /** Base magnitude of this effect. */
     private float baseMagnitude = 0f;
 
+    /** Base duration of this effect. */
     private long baseDuration = 0;
 
-    private long shortestDuration = 0;
+    /** The current shortest duration of all the effects */
+    private long shortestDuration = Long.MAX_VALUE;
 
-    /** A list of all the multipliers for this potion effect's magnitude. */
+    /** A list of all the multipliers for this effect's magnitude. */
     private TFloatList magnitudeMultipliers = new TFloatArrayList();
 
-    /** A list of all the multipliers for this potion effect's duration. */
+    /** A list of all the multipliers for this effect's duration. */
     private TFloatList durationMultipliers = new TFloatArrayList();
 
-    /** A list of all the modifiers for this potion effect's magnitude. */
+    /** A list of all the modifiers for this effect's magnitude. */
     private TFloatList magnitudeModifiers = new TFloatArrayList();
 
-    /** A list of all the modifiers for this potion effect's duration. */
+    /** A list of all the modifiers for this effect's duration. */
     private TDoubleList durationModifiers = new TDoubleArrayList();
-
-    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration) {
-        this.instigator = instigator;
-        this.entity = entity;
-        this.baseMagnitude = baseMagnitude;
-        this.baseDuration = baseDuration;
-    }
-
-    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String id) {
-        this.instigator = instigator;
-        this.entity = entity;
-        this.alterationEffect = alterationEffect;
-        this.id = id;
-    }
 
     public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String effectID, String id) {
         this.instigator = instigator;
@@ -81,23 +78,13 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
         this.id = id;
     }
 
-    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String id) {
+    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String effectID, String id, boolean expired) {
         this.instigator = instigator;
         this.entity = entity;
-        this.baseMagnitude = baseMagnitude;
-        this.baseDuration = baseDuration;
-        this.alterationEffect = alterationEffect;
-        this.id = id;
-    }
-
-    public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String effectID, String id) {
-        this.instigator = instigator;
-        this.entity = entity;
-        this.baseMagnitude = baseMagnitude;
-        this.baseDuration = baseDuration;
         this.alterationEffect = alterationEffect;
         this.effectID = effectID;
         this.id = id;
+        this.expired = expired;
     }
 
     /**
@@ -307,5 +294,21 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
     @Override
     public void consume() {
         consumed = true;
+    }
+
+    /**
+     * Get whether this effect has expired (time ran out) or not (was removed before time ran out).
+     *
+     * @return  The value of the expired flag.
+     */
+    public boolean isExpired() {
+        return expired;
+    }
+
+    /**
+     * Mark this effect as expired (time ran out).
+     */
+    public void expire() {
+        expired = true;
     }
 }

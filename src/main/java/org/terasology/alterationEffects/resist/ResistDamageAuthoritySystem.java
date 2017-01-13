@@ -56,26 +56,6 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void expireResistDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, ResistDamageComponent component) {
-        /*
-        final String actionId = event.getActionId();
-        if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
-            String effectName = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
-            String[] split = actionId.split(":");
-
-            if (split.length != 4) {
-                return;
-            }
-
-            if (split[2].equalsIgnoreCase(AlterationEffects.RESIST_DAMAGE)) {
-                component.rdes.remove(split[3]);
-
-                if (component.rdes.size() == 0 && component != null) {
-                    entity.removeComponent(ResistDamageComponent.class);
-                }
-            }
-        }
-        */
-
         final String actionId = event.getActionId();
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
             String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());

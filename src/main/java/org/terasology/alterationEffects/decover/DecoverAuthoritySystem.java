@@ -30,9 +30,9 @@ public class DecoverAuthoritySystem extends BaseComponentSystem {
     /**
      * This prevents the entity from being healed
      *
-     * @param event the event called before an entity is healed
-     * @param entity the entity with the decover effect
-     * @param component the decover component added to entities with the decover effect
+     * @param event     The event called before an entity is healed
+     * @param entity    The entity with the decover effect
+     * @param component The decover component added to entities with the decover effect
      */
     @ReceiveEvent
     public void cancelHeal(BeforeHealEvent event, EntityRef entity, DecoverComponent component) {
