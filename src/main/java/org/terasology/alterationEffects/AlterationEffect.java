@@ -23,7 +23,4 @@ public interface AlterationEffect {
     void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration);
 
     void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration);
-    // TODO:
-    // Add void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration);
-    // So that effects from different systems (like Potions, Equipment, Spells, etc.) can be better distuingusihed.
 }

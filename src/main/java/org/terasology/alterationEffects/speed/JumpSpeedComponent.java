@@ -18,8 +18,17 @@ import org.terasology.entitySystem.Component;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * This is the component added to entities with the jump speed effect.
+ */
 public class JumpSpeedComponent implements Component {
+    /** This will affect how much the base jump speed is added by. */
     public float modifier; // TODO: Won't work until AlterationEffects has something else in addition to magnitude.
+
+    /**
+     * This affects how much the base jump speed is multiplied by. 1 is normal speed, 0 is immobility, and 2 is double
+     * speed.
+     */
     public float multiplier;
 }
 

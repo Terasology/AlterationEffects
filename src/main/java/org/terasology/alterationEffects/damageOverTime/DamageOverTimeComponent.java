@@ -22,10 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This component is used for keeping track of the various damage over time (DOT) effects an entity can have currently
+ * in effect.
+ */
 public class DamageOverTimeComponent implements Component {
-    public int damageAmount;
-    public long lastDamageTime;
-    public String source;
+    /** This map keeps track of the various DOT effects currently in effect. */
     public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();
+
+    /** This map keeps track of all the effectIDs of all the current DOT effects being applied to an entity. */
     public Map<String, Map<String, Boolean>> effectIDMap = new HashMap<String, Map<String, Boolean>>();
 }

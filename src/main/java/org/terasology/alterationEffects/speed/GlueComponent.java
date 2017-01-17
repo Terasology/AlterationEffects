@@ -19,5 +19,6 @@ import org.terasology.entitySystem.Component;
 
 /** Meant to represent a stickying effect of some sort, as if stuck in a spiderweb. */
 public class GlueComponent implements Component {
+    /** This affects how strong the glue effect is by multiplying against the base value. */
     public float multiplier;
 }

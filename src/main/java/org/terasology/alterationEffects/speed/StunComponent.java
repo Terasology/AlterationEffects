@@ -17,5 +17,8 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * This is the component added to entities with the stun effect.
+ */
 public class StunComponent implements Component {
 }

@@ -18,7 +18,7 @@ package org.terasology.alterationEffects.decover;
 import org.terasology.entitySystem.Component;
 
 /**
- * This is the component added to entities with the decover effect
+ * This is the component added to entities with the decover effect.
  */
 public class DecoverComponent implements Component {
 }

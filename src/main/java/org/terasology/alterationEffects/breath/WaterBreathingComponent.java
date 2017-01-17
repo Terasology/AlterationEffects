@@ -17,5 +17,8 @@ package org.terasology.alterationEffects.breath;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * This is the component added to entities with the water breathing effect.
+ */
 public class WaterBreathingComponent implements Component {
 }
