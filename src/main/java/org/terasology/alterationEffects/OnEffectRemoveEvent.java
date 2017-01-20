@@ -24,9 +24,10 @@ import gnu.trove.list.array.TFloatArrayList;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ConsumableEvent;
 
-// USe BeforeApplyPotionEffectEvent as a base for OnEffectModifyEvent.
-// Have a ref to the AlterationEffect.
-
+/**
+ * This event is sent to inform all effect-related systems that a particular effect has expired. Or more specifically,
+ * a modifier for a particular effect.
+ */
 public class OnEffectRemoveEvent implements ConsumableEvent {
     /** Flags whether this event been consumed or not. */
     private boolean consumed;
@@ -70,6 +71,16 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
     /** A list of all the modifiers for this effect's duration. */
     private TDoubleList durationModifiers = new TDoubleArrayList();
 
+    /**
+     * Create an instance of this event with the given base values, alteration effect, effectID (for differentiating
+     * individual effects), and ID (if needed).
+     *
+     * @param instigator        The entity that caused this effect to be removed.
+     * @param entity            The entity that the effect was currently on.
+     * @param alterationEffect  The original alteration effect that created this effect.
+     * @param effectID          The effectID of the modifier that expired.
+     * @param id                The ID of this effect.
+     */
     public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String effectID, String id) {
         this.instigator = instigator;
         this.entity = entity;
@@ -78,6 +89,18 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
         this.id = id;
     }
 
+    /**
+     * Create an instance of this event with the given base values, alteration effect, effectID (for differentiating
+     * individual effects), ID (if needed), and starting expire flag value. The latter will indicate if this event was
+     * sent due to an effect expiring or just getting removed before its duration had concluded.
+     *
+     * @param instigator        The entity that caused this effect to be removed.
+     * @param entity            The entity that the effect was currently on.
+     * @param alterationEffect  The original alteration effect that created this effect.
+     * @param effectID          The effectID of the modifier that expired.
+     * @param id                The ID of this effect.
+     * @param expired           Flag indicating whether this effect modifier had expired or not.
+     */
     public OnEffectRemoveEvent(EntityRef instigator, EntityRef entity, AlterationEffect alterationEffect, String effectID, String id, boolean expired) {
         this.instigator = instigator;
         this.entity = entity;
@@ -101,18 +124,38 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
      */
     public EntityRef getEntity() { return entity; }
 
+    /**
+     * Get a reference to the alteration effect that created the original effect.
+     *
+     * @return  A reference to the original alteration effect.
+     */
     public AlterationEffect getAlterationEffect() {
         return alterationEffect;
     }
 
+    /**
+     * Get the effectID of this effect modifier.
+     *
+     * @return  The effectID of the modifier.
+     */
     public String getEffectId() {
         return effectID;
     }
 
+    /**
+     * Get the ID of this effect.
+     *
+     * @return  The ID of the effect.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Get the shortest duration of all modifiers collected in this list.
+     *
+     * @return  The shortest duration counted.
+     */
     public long getShortestDuration() {
         return shortestDuration;
     }
@@ -276,14 +319,6 @@ public class OnEffectRemoveEvent implements ConsumableEvent {
         }
         */
         return (long) result;
-    }
-
-    public void setBaseMagnitude(float base) {
-        baseMagnitude = base;
-    }
-
-    public void setBaseDuration(long base) {
-        baseDuration = base;
     }
 
     @Override

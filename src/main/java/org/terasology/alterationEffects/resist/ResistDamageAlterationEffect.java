@@ -139,9 +139,4 @@ public class ResistDamageAlterationEffect implements AlterationEffect {
         // If this point is reached and none of the above if-clauses were met, that means there was at least one modifier
         // collected in the event which has infinite duration.
     }
-
-    @Override
-    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
-
-    }
 }

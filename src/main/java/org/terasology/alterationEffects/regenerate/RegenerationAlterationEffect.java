@@ -132,41 +132,4 @@ public class RegenerationAlterationEffect implements AlterationEffect {
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);
     }
-
-    @Override
-    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
-        RegenerationComponent regeneration = entity.getComponent(RegenerationComponent.class);
-        if (regeneration == null) {
-            regeneration = new RegenerationComponent();
-            regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
-            regeneration.lastRegenerationTime = time.getGameTimeInMs();
-            entity.addComponent(regeneration);
-        } else {
-            regeneration.regenerationAmount = TeraMath.floorToInt(magnitude);
-            regeneration.lastRegenerationTime = time.getGameTimeInMs();
-            entity.addComponent(regeneration);
-        }
-
-        OnEffectModifyEvent effectModifyEvent = entity.send(new OnEffectModifyEvent(instigator, entity, 0, 0, this, ""));
-        long modifiedDuration = 0;
-        boolean modifiersFound = false;
-
-        if (!effectModifyEvent.isConsumed()) {
-            float modifiedMagnitude = effectModifyEvent.getMagnitudeResultValue();
-            modifiedDuration = effectModifyEvent.getShortestDuration();
-
-            if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
-                regeneration.regenerationAmount = (int) modifiedMagnitude;
-                modifiersFound = true;
-            }
-        }
-
-        if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION + "|" + effectID, duration);
-        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
-            delayManager.addDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.REGENERATION, duration);
-        } else if (duration != AlterationEffects.DURATION_INDEFINITE) {
-            entity.removeComponent(RegenerationComponent.class);
-        }
-    }
 }

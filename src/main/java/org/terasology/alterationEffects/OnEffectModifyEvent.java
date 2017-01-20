@@ -17,19 +17,18 @@ package org.terasology.alterationEffects;
 
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.iterator.TFloatIterator;
-import gnu.trove.iterator.TLongIterator;
 import gnu.trove.list.TDoubleList;
 import gnu.trove.list.TFloatList;
-import gnu.trove.list.TLongList;
 import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TFloatArrayList;
-import gnu.trove.list.array.TLongArrayList;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ConsumableEvent;
 
-// USe BeforeApplyPotionEffectEvent as a base for OnEffectModifyEvent.
-// Have a ref to the AlterationEffect.
-
+/**
+ * This event is sent to an entity to collect all the potential magnitude and duration modifiers for a particular
+ * alteration effect. The entire event may be consumed if needed. This is intended to be called when a new effect is
+ * created or a new modifier is added.
+ */
 public class OnEffectModifyEvent implements ConsumableEvent {
     /** Flags whether this event been consumed or not. */
     private boolean consumed;
@@ -58,24 +57,38 @@ public class OnEffectModifyEvent implements ConsumableEvent {
     /** ID of the item or entity that has the current shortest duration left for its effect being applied. */
     private String effectIDWithShortestDuration = "";
 
+    /** Flag for checking if at least one modifier has infinite duration. */
     private boolean hasInfDuration = false;
+
+    /** String that stores the effectID with infinite duration. */
     private String effectIDWithInfiniteDuration = "";
 
+    /* Flag for checking if at least one modifier has zero duration. */
     private boolean hasZeroDuration = false;
+
+    /** String that stores the effectID with zero duration. */
     private String effectIDWithZeroDuration = "";
 
-    /** A list of all the multipliers for this potion effect's magnitude. */
+    /** A list of all the multipliers for this alteration effect's magnitude. */
     private TFloatList magnitudeMultipliers = new TFloatArrayList();
 
-    /** A list of all the multipliers for this potion effect's duration. */
+    /** A list of all the multipliers for this alteration effect's duration. */
     private TFloatList durationMultipliers = new TFloatArrayList();
 
-    /** A list of all the modifiers for this potion effect's magnitude. */
+    /** A list of all the modifiers for this alteration effect's magnitude. */
     private TFloatList magnitudeModifiers = new TFloatArrayList();
 
-    /** A list of all the modifiers for this potion effect's duration. */
+    /** A list of all the modifiers for this alteration effect's duration. */
     private TDoubleList durationModifiers = new TDoubleArrayList();
 
+    /**
+     * Create an instance of this event with the minimum number of required parameters. Only use this for debugging.
+     *
+     * @param instigator        The entity that caused this effect to be applied or modified.
+     * @param entity            The entity that the effect is currently on.
+     * @param baseMagnitude     The base magnitude of this effect.
+     * @param baseDuration      The base duration of this effect.
+     */
     public OnEffectModifyEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration) {
         this.instigator = instigator;
         this.entity = entity;
@@ -83,6 +96,18 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         this.baseDuration = baseDuration;
     }
 
+    /**
+     * Create an instance of this event with the given base values, alteration effect, and ID (if needed). Use this one
+     * over the other method if you wish to use the updated effects system.
+     *
+     * @param instigator        The entity that caused this effect to be applied or modified.
+     * @param entity            The entity that the effect is currently on.
+     * @param baseMagnitude     The base magnitude of this effect.
+     * @param baseDuration      The base duration of this effect.
+     * @param alterationEffect  The original alteration effect that created this effect.
+     * @param id                The optional ID of this effect. Only used for effects that support sub-types (like DOT
+     *                          for example).
+     */
     public OnEffectModifyEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String id) {
         this.instigator = instigator;
         this.entity = entity;
@@ -106,14 +131,30 @@ public class OnEffectModifyEvent implements ConsumableEvent {
      */
     public EntityRef getEntity() { return entity; }
 
+    /**
+     * Get a reference to the alteration effect that created the original effect.
+     *
+     * @return  A reference to the original alteration effect.
+     */
     public AlterationEffect getAlterationEffect() {
         return alterationEffect;
     }
 
+    /**
+     * Get the ID of this effect.
+     *
+     * @return  The ID of the effect.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Get the shortest duration of all modifiers collected in this list. If one or more had zero duration, zero will
+     * be returned. Otherwise, it'll be the shortest duration counted.
+     *
+     * @return  The shortest duration counted.
+     */
     public long getShortestDuration() {
         if (hasZeroDuration) {
             return 0;
@@ -158,6 +199,13 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         return durationModifiers;
     }
 
+    /**
+     * Get the effectID of the effect modifier with the shortest duration. If one or more had zero duration, the last
+     * effectID counted that had zero duration will be returned. Otherwise, the effectID associated with the modifier
+     * with the shortest duration will be returned.
+     *
+     * @return  The effectID associated to the modifier with the shortest counted duration.
+     */
     public String getEffectIDWithShortestDuration() {
         if (hasZeroDuration) {
             return effectIDWithZeroDuration;
@@ -166,10 +214,20 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         }
     }
 
+    /**
+     * Get the effectID associated with the modifier with infinite duration.
+     *
+     * @return  The effectID of the modifier with infinite duration.
+     */
     public String getEffectIDWithInfiniteDuration() {
         return effectIDWithInfiniteDuration;
     }
 
+    /**
+     * Get whether one or more of the modifiers collected has infinite duration.
+     *
+     * @return  The value of the hasInfDuration flag.
+     */
     public boolean getHasInfDuration() {
         return hasInfDuration;
     }
@@ -318,14 +376,6 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         }
         */
         return (long) result;
-    }
-
-    public void setBaseMagnitude(float base) {
-        baseMagnitude = base;
-    }
-
-    public void setBaseDuration(long base) {
-        baseDuration = base;
     }
 
     @Override

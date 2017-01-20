@@ -45,8 +45,9 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
      */
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
-        // Get the HealthComponent from this entity, and set it's max health back to the original value.
         HealthComponent h = entity.getComponent(HealthComponent.class);
+
+        // Reverse the max health boosting effect by dividing the old boost amount.
         h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f*hBoost.boostAmount));
 
         // If the current health is greater than the new max health, set the current health value to be the max health.

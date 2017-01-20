@@ -123,20 +123,38 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
         }
     }
 
+    /**
+     * For every update, check to see if the time's been over the CHECK_INTERVAL. If so, verify if a DAMAGE_TICK has
+     * passed for every DOT effect.
+     *
+     * @param delta The time (in seconds) since the last engine update.
+     */
     @Override
     public void update(float delta) {
         final long currentTime = time.getGameTimeInMs();
+
+        // If the current time passes the CHECK_INTERVAL threshold, continue.
         if (currentTime >= lastUpdated + CHECK_INTERVAL) {
+            // Set the lastUpdated time to be the currentTime.
             lastUpdated = currentTime;
 
+            // For every entity with the health and DOT components, check to see if they have passed a DAMAGE_TICK. If
+            // so, apply a heal event to the applicable entities with the given damageAmount.
             for (EntityRef entity : entityManager.getEntitiesWith(DamageOverTimeComponent.class, HealthComponent.class)) {
                 final DamageOverTimeComponent component = entity.getComponent(DamageOverTimeComponent.class);
 
+                // Iterate through all of the DOT effects present on thie entity, and apply them to the entity.
                 for (DamageOverTimeEffect dotEffect : component.dots.values()) {
                     if (currentTime >= dotEffect.lastDamageTime + DAMAGE_TICK) {
+                        // Calculate this multiplier to account for time delays.
                         int multiplier = (int) (currentTime - dotEffect.lastDamageTime) / DAMAGE_TICK;
                         dotEffect.lastDamageTime = dotEffect.lastDamageTime + DAMAGE_TICK * multiplier;
+
+                        // Save the DOT component so that the latest changes don't get lost during exit.
                         entity.saveComponent(component);
+
+                        // Now send the damage event to this entity with the magnitude being the damage amount times
+                        // the multiplier.
                         entity.send(new DoDamageEvent(dotEffect.damageAmount * multiplier,
                                 Assets.getPrefab(dotEffect.damageType).get()));
                     }

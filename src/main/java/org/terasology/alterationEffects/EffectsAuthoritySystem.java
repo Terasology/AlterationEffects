@@ -19,12 +19,9 @@ import org.terasology.alterationEffects.boost.HealthBoostAlterationEffect;
 import org.terasology.alterationEffects.boost.HealthBoostComponent;
 import org.terasology.alterationEffects.breath.WaterBreathingAlterationEffect;
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
-import org.terasology.alterationEffects.damageOverTime.CureAllDamageOverTimeAlterationEffect;
-import org.terasology.alterationEffects.damageOverTime.DamageOverTimeAlterationEffect;
 import org.terasology.alterationEffects.decover.DecoverAlterationEffect;
 import org.terasology.alterationEffects.regenerate.RegenerationAlterationEffect;
 import org.terasology.alterationEffects.regenerate.RegenerationComponent;
-import org.terasology.alterationEffects.resist.ResistDamageAlterationEffect;
 import org.terasology.alterationEffects.speed.GlueAlterationEffect;
 import org.terasology.alterationEffects.speed.GlueComponent;
 import org.terasology.alterationEffects.speed.ItemUseSpeedAlterationEffect;
@@ -46,18 +43,24 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * This authority system manages the expiration of the basic alteration effects. Other authority systems will handle
+ * the more complex effects that require more than just simply removing the effect component from the entity and
+ * informing other systems.
+ */
 @RegisterSystem
 public class EffectsAuthoritySystem extends BaseComponentSystem {
+    /** This will store the mapping of the effect constants to the effect components. */
     private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
+
+    /** This will store the mapping of the effect constants to the alteration effects. */
     private Map<String, AlterationEffect> alterationEffects = new HashMap<>();
 
     /**
@@ -66,11 +69,11 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
     @In
     private Context context;
 
+    /**
+     * Initialize all elements of the two maps.
+     */
     @Override
     public void initialise() {
-        // Get the context.
-        DelayManager delayManager = CoreRegistry.get(DelayManager.class);
-
         effectComponents.put(AlterationEffects.WALK_SPEED, WalkSpeedComponent.class);
         effectComponents.put(AlterationEffects.SWIM_SPEED, SwimSpeedComponent.class);
         effectComponents.put(AlterationEffects.JUMP_SPEED, JumpSpeedComponent.class);
@@ -96,27 +99,48 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
         alterationEffects.put(AlterationEffects.GLUE, new GlueAlterationEffect(context));
     }
 
+    /**
+     * Once a basic effect's duration has expired, remove the effect from the entity that had it, send a removal event,
+     * informing the other effect systems, and then re-apply the associated alteration effect.
+     *
+     * @param event     Event with information of what particular effect expired.
+     * @param entity    The entity that had the expired effect.
+     */
     @ReceiveEvent
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
         final String actionId = event.getActionId();
+
+        // First, make sure this expired event is actually part of the AlterationEffects module.
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
+            // Remove the expire trigger prefix and store the resultant String into effectNamePlusID.
             String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+
+            // Split the effectNamePlusID into two parts. The first part will contain the AlterationEffect's name, and
+            // the second part will contain the effectID.
             String[] parts = effectNamePlusID.split(Pattern.quote("|"), 2);
 
+            // If there are two items in the parts, set the effectID accordingly.
             String effectID = "";
             if (parts.length == 2) {
                 effectID = parts[1];
             }
 
-            String effectName = parts[0]; //actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
+            // Set the effectName using the first String in the parts array.
+            String effectName = parts[0];
+
+            // If this DelayedActionTriggeredEvent corresponds to one of the basic alteration effects.
             final Class<? extends Component> component = effectComponents.get(effectName);
             if (component != null) {
+                // Remove the component corresponding to this particular effect.
                 entity.removeComponent(component);
 
+                // Send out an event alerting the other effect-related systems that this effect has been removed.
                 entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, "", true));
+
+                // Re-apply this effect so that if there are any modifiers still in effect, they'll be recalculated and
+                // reapplied to the entity correctly.
                 alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
             }
         }
     }
-
 }

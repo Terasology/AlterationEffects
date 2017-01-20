@@ -46,14 +46,18 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
     }
 
     /**
+     * Removes the effect of the given health boost from the entity.
      *
-     * @param entity
-     * @param hBoost
+     * @param entity        The entity which has the health boost effect.
+     * @param hBoost        The health boost component.
      */
     private void removeBoost(EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);
+
+        // Reverse the max health boosting effect by dividing the old boost amount.
         h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f*hBoost.boostAmount));
 
+        // If the current health is greater than the new max health, set the current health value to be the max health.
         if (h.currentHealth > h.maxHealth) {
             h.currentHealth = h.maxHealth;
         }
@@ -76,25 +80,11 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
         if (hbot == null) {
             hbot = new HealthBoostComponent();
             hbot.boostAmount = TeraMath.floorToInt(magnitude);
-            //hbot.lastUseTime = time.getGameTimeInMs();
-
-            //HealthComponent h = entity.getComponent(HealthComponent.class);
-            //h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f * hbot.boostAmount));
-
             entity.addComponent(hbot);
         } else {
             // Remove the current health boost in place.
             removeBoost(entity, hbot);
-            //HealthComponent h = entity.getComponent(HealthComponent.class);
-
-            //delayManager.cancelDelayedAction(entity, AlterationEffects.EXPIRE_TRIGGER_PREFIX + AlterationEffects.MAX_HEALTH_BOOST);
-            //entity.removeComponent(HealthBoostComponent.class);
-
             hbot.boostAmount = TeraMath.floorToInt(magnitude);
-            //hbot.lastUseTime = time.getGameTimeInMs();
-            //h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f * hbot.boostAmount));
-
-            //entity.addComponent(hbot);
         }
 
         // Send out this event to collect all the duration and magnitude modifiers and multipliers that can affect this
@@ -166,10 +156,5 @@ public class HealthBoostAlterationEffect implements AlterationEffect {
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         applyEffect(instigator, entity, magnitude, duration);
-    }
-
-    @Override
-    public void applyEffect(EntityRef instigator, EntityRef entity, String effectID, String id, float magnitude, long duration) {
-
     }
 }
