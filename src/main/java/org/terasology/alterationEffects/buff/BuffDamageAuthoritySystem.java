@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.alterationEffects.resist;
+package org.terasology.alterationEffects.buff;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.OnEffectRemoveEvent;
@@ -26,17 +26,17 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.logic.health.event.BeforeDamagedEvent;
+import org.terasology.logic.health.BeforeDamagedEvent;
 import org.terasology.registry.In;
 
 import java.util.regex.Pattern;
 
 /**
- * This authority system manages all the resist damage effects currently in-effect across all entities. By that, it
- * handles what course of action to take when one expires, and interactions with incoming damage.
+ * This authority system manages all the buff damage effects currently in-effect across all entities. By that, it
+ * handles what course of action to take when one expires, and interactions with outgoing damage.
  */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
-public class ResistDamageAuthoritySystem extends BaseComponentSystem {
+public class BuffDamageAuthoritySystem extends BaseComponentSystem {
     @In
     private Time time;
     @In
@@ -45,15 +45,15 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
     private Context context;
 
     /**
-     * When one of this entity's resist damage effects expire, remove it from the resist damage effects map and
+     * When one of this entity's buff damage effects expire, remove it from the damage buff effects map and
      * recalculate the total magnitude for this damage type.
      *
      * @param event         Event that indicates that the delayed action has expired.
-     * @param entity        Entity that has the resist damage component.
-     * @param component     Stores information of all the entity's current damage resistances.
+     * @param entity        Entity that has the buff damage component.
+     * @param component     Stores information of all the entity's current damage buffs.
      */
     @ReceiveEvent
-    public void expireResistDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, ResistDamageComponent component) {
+    public void expireBuffDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, BuffDamageComponent component) {
         final String actionId = event.getActionId();
 
         // First, make sure this expired event is actually part of the AlterationEffects module.
@@ -82,55 +82,49 @@ public class ResistDamageAuthoritySystem extends BaseComponentSystem {
                 return;
             }
 
-            // If this DelayedActionTriggeredEvent corresponds to this particular ResistDamage effect.
-            if (split[2].equalsIgnoreCase(AlterationEffects.RESIST_DAMAGE)) {
-                // Remove the ResistDamageEffect from the damage resistances map.
-                component.rdes.remove(damageID);
+            // If this DelayedActionTriggeredEvent corresponds to this particular BuffDamage effect.
+            if (split[2].equalsIgnoreCase(AlterationEffects.BUFF_DAMAGE)) {
+                // Remove the BuffDamageEffect from the damage buffs map.
+                component.bdes.remove(damageID);
 
                 // Create a new resist damage alteration effect using the current context. Then, send out an event
-                // alerting the other effect-related systems that this particular resist damage effect has been
+                // alerting the other effect-related systems that this particular buff damage effect has been
                 // removed.
-                ResistDamageAlterationEffect resistDamageAlterationEffect = new ResistDamageAlterationEffect(context);
-                entity.send(new OnEffectRemoveEvent(entity, entity, resistDamageAlterationEffect, effectID, damageID));
+                BuffDamageAlterationEffect buffDamageAlterationEffect = new BuffDamageAlterationEffect(context);
+                entity.send(new OnEffectRemoveEvent(entity, entity, buffDamageAlterationEffect, effectID, damageID));
 
-                // Re-apply the resist damage effect of this particular effect type so that if there are any modifiers
+                // Re-apply the buff damage effect of this particular effect type so that if there are any modifiers
                 // still in effect, they'll be recalculated and reapplied to the entity correctly.
-                resistDamageAlterationEffect.applyEffect(entity, entity, damageID, 0, 0);
+                buffDamageAlterationEffect.applyEffect(entity, entity, damageID, 0, 0);
 
-                // If the size of the damage resistances map is zero and the resist damage component doesn't exist
+                // If the size of the damage buffs map is zero and the buff damage component doesn't exist
                 // anymore, remove it from the entity.
-                if (component.rdes.size() == 0 && component != null) {
-                    entity.removeComponent(ResistDamageComponent.class);
+                if (component.bdes.size() == 0 && component != null) {
+                    entity.removeComponent(BuffDamageComponent.class);
                 }
             }
         }
     }
 
     /**
-     * Upon getting a damage event and the entity on the receiving end has a damage resistance, check to see if the
-     * incoming damage type matches the resistance. If so, reduce the damage.
+     * Upon getting a damage event and the entity on the sending end has a damage buff, check to see if the incoming
+     * damage type matches the buff's type. If so, increase the damage by the buff's amount.
      *
-     * @param event         Event with information of the incoming damage.
-     * @param entity        Entity that the damage is going to be dealt to.
-     * @param component     Stores information of all the entity's current damage resistances.
+     * @param event         Event with information of the outgoing damage.
+     * @param entity        Entity that's dealing the damage.
+     * @param component     Stores information of all the entity's current damage buffs.
      */
     @ReceiveEvent
-    public void resistDamageOfType(BeforeDamagedEvent event, EntityRef entity, ResistDamageComponent component) {
+    public void buffDamageOfType(BeforeDamagedEvent event, EntityRef entity, BuffDamageComponent component) {
         String damageType = event.getDamageType().getName();
 
-        // If the damage type matches one of the resistances.
-        if (component.rdes.containsKey(damageType.split(":", 2)[1])) {
-            // Get the details of the resistance.
-            ResistDamageEffect rdEffect = component.rdes.get(damageType.split(":", 2)[1]);
+        // If the damage type matches one of the buffs.
+        if (component.bdes.containsKey(damageType.split(":", 2)[1])) {
+            // Get the details of the buff.
+            BuffDamageEffect bdEffect = component.bdes.get(damageType.split(":", 2)[1]);
 
-            // If the resistance amount is greater than the total damage amount, nullify all of the damage. Otherwise,
-            // subtract the resistance from the damage.
-            if (rdEffect.resistAmount >= event.getResultValue()) {
-                event.multiply(0);
-            }
-            else {
-                event.add(-rdEffect.resistAmount);
-            }
+            // Add the buff amount to the damage.
+            event.add(bdEffect.buffAmount);
         }
     }
 }
