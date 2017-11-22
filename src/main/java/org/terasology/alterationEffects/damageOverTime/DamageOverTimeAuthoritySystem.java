@@ -70,6 +70,13 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
 
         // First, make sure this expired event is actually part of the AlterationEffects module.
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
+            // Make sure that this effect actionID actually has four parts to it (before the effectID). If not, return,
+            // as this is the wrong format for this kind of AlterationEffect.
+            String[] split = actionId.split(":");
+            if (split.length != 4) {
+                return;
+            }
+
             // Remove the expire trigger prefix and store the resultant String into effectNamePlusID.
             String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
 
@@ -86,12 +93,6 @@ public class DamageOverTimeAuthoritySystem extends BaseComponentSystem implement
                 // AlterationEffect name, and the second item will contain the damage type (or ID).
                 damageID = parts[0].split(":")[1];
                 effectID = parts[1];
-            }
-
-            // Make sure that this effect actionID actually has four parts to it (before the effectID). If not, return.
-            String[] split = actionId.split(":");
-            if (split.length != 4) {
-                return;
             }
 
             // If this DelayedActionTriggeredEvent corresponds to this particular DamageOverTime effect.
