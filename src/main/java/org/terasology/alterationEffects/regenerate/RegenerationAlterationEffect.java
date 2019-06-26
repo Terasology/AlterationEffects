@@ -22,6 +22,7 @@ import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.delay.DelayManager;
+import org.terasology.logic.health.event.ActivateRegenEvent;
 import org.terasology.math.TeraMath;
 
 /**
@@ -53,6 +54,7 @@ public class RegenerationAlterationEffect implements AlterationEffect {
      * @param magnitude     The magnitude of the regen effect.
      * @param duration      The duration of the regen effect.
      */
+    @SuppressWarnings("CheckStyle")
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         // First, determine if the entity already has a regeneration component attached. If so, just replace the amount
@@ -124,12 +126,13 @@ public class RegenerationAlterationEffect implements AlterationEffect {
      *
      * @param instigator    The entity who applied the regen effect.
      * @param entity        The entity that the regen effect is being applied on.
-     * @param id            Inapplicable to the regen effect.
+     * @param id            Id is used for unique identification in regen scheduler.
      * @param magnitude     The magnitude of the regen effect.
      * @param duration      The duration of the regen effect.
      */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
-        applyEffect(instigator, entity, magnitude, duration);
+        //applyEffect(instigator, entity, magnitude, duration);
+        entity.send(new ActivateRegenEvent(id, (int) magnitude, ((float) duration) / 1000));
     }
 }
