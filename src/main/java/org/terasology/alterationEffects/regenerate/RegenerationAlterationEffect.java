@@ -54,7 +54,6 @@ public class RegenerationAlterationEffect implements AlterationEffect {
      * @param magnitude     The magnitude of the regen effect.
      * @param duration      The duration of the regen effect.
      */
-    @SuppressWarnings("CheckStyle")
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
         // First, determine if the entity already has a regeneration component attached. If so, just replace the amount
@@ -133,6 +132,8 @@ public class RegenerationAlterationEffect implements AlterationEffect {
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //applyEffect(instigator, entity, magnitude, duration);
-        entity.send(new ActivateRegenEvent(id, (int) magnitude, ((float) duration) / 1000));
+        if (magnitude != 0) {
+            entity.send(new ActivateRegenEvent(id, (int) magnitude, ((float) duration) / 1000));
+        }
     }
 }
