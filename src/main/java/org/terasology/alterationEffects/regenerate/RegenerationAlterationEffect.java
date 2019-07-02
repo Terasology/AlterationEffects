@@ -133,7 +133,7 @@ public class RegenerationAlterationEffect implements AlterationEffect {
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //applyEffect(instigator, entity, magnitude, duration);
         if (magnitude != 0) {
-            entity.send(new ActivateRegenEvent(id, (int) magnitude, ((float) duration) / 1000));
+            entity.send(new ActivateRegenEvent(id, magnitude, ((float) duration) / 1000));
         }
     }
 }
