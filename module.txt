@@ -5,7 +5,7 @@
     "displayName" : "AlterationEffects",
     "description" : "Allows for applying modifying effects to a player (or something else) that alters their base state in some fashion.",
     "dependencies" : [
-        {"id" : "Core", "minVersion" : "2.0.0"}
+        {"id" : "Core", "minVersion" : "3.0.0"}
     ],
     "isServerSideOnly" : false
 }
