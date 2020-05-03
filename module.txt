@@ -4,7 +4,9 @@
     "author" : "Marcin Sciesinski <marcins78@gmail.com>, XTariq, Isaac (iojw)",
     "displayName" : "AlterationEffects",
     "description" : "Allows for applying modifying effects to a player (or something else) that alters their base state in some fashion.",
-    "dependencies" : [],
+    "dependencies" : [
+        {"id" : "Health", "minVersion" : "0.1.0"}
+    ],
     "isServerSideOnly" : false,
     "isLibrary": true
 }
