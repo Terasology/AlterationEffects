@@ -42,7 +42,6 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //TODO: why pass magnitude and duration here instead of using it in the event
         entity.upsertComponent(componentClass, maybeComponent -> upsertComponent(maybeComponent, magnitude, duration));
-        C component = entity.getComponent(componentClass);
 
         // 2. send OnEffectModifyEvent
         OnEffectModifyEvent effectModifyEvent = entity.send(
@@ -57,7 +56,7 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
             modifiedDuration = effectModifyEvent.getShortestDuration();
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
-                component = updateComponent(effectModifyEvent, component);
+                entity.updateComponent(componentClass, c -> updateComponent(effectModifyEvent, c));
                 modifiersFound = true;
             }
         }
