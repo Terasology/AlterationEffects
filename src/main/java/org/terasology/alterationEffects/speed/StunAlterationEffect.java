@@ -32,7 +32,7 @@ public class StunAlterationEffect extends ComponentBasedAlterationEffect<StunCom
     }
 
     @Override
-    protected StunComponent upsertComponent(Optional<StunComponent> maybeComponent) {
+    protected StunComponent upsertComponent(Optional<StunComponent> maybeComponent, float magnitude, long duration) {
         return maybeComponent.orElse(new StunComponent());
     }
 
