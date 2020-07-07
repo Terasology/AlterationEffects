@@ -3,7 +3,6 @@
 
 package org.terasology.alterationEffects;
 
-import org.terasology.alterationEffects.speed.WalkSpeedComponent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -79,7 +78,7 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
             // Otherwise, if there are either no modifiers found, or none of the modifiers collected in the event
             // have infinite
             // duration, remove the component associated with this walk speed effect.
-            entity.removeComponent(WalkSpeedComponent.class);
+            entity.removeComponent(componentClass);
         }
         // If this point is reached and none of the above if-clauses were met, that means there was at least one
         // modifier
