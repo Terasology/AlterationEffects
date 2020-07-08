@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -39,14 +40,15 @@ public class GlueAlterationEffect extends ComponentBasedAlterationEffect<GlueCom
     }
 
     @Override
-    protected GlueComponent upsertComponent(Optional<GlueComponent> maybeComponent, float magnitude, long duration) {
+    protected GlueComponent upsertComponent(Optional<GlueComponent> maybeComponent, final EffectContext context) {
         GlueComponent glueComponent = maybeComponent.orElse(new GlueComponent());
-        glueComponent.multiplier = magnitude;
+        glueComponent.multiplier = context.magnitude;
         return glueComponent;
     }
 
     @Override
-    protected GlueComponent updateComponent(OnEffectModifyEvent event, GlueComponent component) {
+    protected GlueComponent updateComponent(OnEffectModifyEvent event, GlueComponent component,
+                                            final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }

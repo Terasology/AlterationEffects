@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.breath;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -40,12 +41,13 @@ public class WaterBreathingAlterationEffect extends ComponentBasedAlterationEffe
 
     @Override
     protected WaterBreathingComponent upsertComponent(Optional<WaterBreathingComponent> maybeComponent,
-                                                      float magnitude, long duration) {
+                                                      final EffectContext context) {
         return maybeComponent.orElse(new WaterBreathingComponent());
     }
 
     @Override
-    protected WaterBreathingComponent updateComponent(OnEffectModifyEvent event, WaterBreathingComponent component) {
+    protected WaterBreathingComponent updateComponent(OnEffectModifyEvent event, WaterBreathingComponent component,
+                                                      final EffectContext context) {
         return component;
     }
 }

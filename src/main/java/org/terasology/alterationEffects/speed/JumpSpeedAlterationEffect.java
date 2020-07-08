@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -39,15 +40,16 @@ public class JumpSpeedAlterationEffect extends ComponentBasedAlterationEffect<Ju
     }
 
     @Override
-    protected JumpSpeedComponent upsertComponent(Optional<JumpSpeedComponent> maybeComponent, float magnitude,
-                                                 long duration) {
+    protected JumpSpeedComponent upsertComponent(Optional<JumpSpeedComponent> maybeComponent,
+                                                 final EffectContext context) {
         JumpSpeedComponent jumpSpeed = maybeComponent.orElse(new JumpSpeedComponent());
-        jumpSpeed.multiplier = magnitude;
+        jumpSpeed.multiplier = context.magnitude;
         return jumpSpeed;
     }
 
     @Override
-    protected JumpSpeedComponent updateComponent(OnEffectModifyEvent event, JumpSpeedComponent component) {
+    protected JumpSpeedComponent updateComponent(OnEffectModifyEvent event, JumpSpeedComponent component,
+                                                 final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }

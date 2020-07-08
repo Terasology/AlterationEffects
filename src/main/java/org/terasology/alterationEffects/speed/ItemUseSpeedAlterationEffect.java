@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.logic.delay.DelayManager;
@@ -42,15 +43,16 @@ public class ItemUseSpeedAlterationEffect extends ComponentBasedAlterationEffect
     }
 
     @Override
-    protected ItemUseSpeedComponent upsertComponent(Optional<ItemUseSpeedComponent> maybeComponent, float magnitude,
-                                                    long duration) {
+    protected ItemUseSpeedComponent upsertComponent(Optional<ItemUseSpeedComponent> maybeComponent,
+                                                    final EffectContext context) {
         ItemUseSpeedComponent itemUseSpeed = maybeComponent.orElse(new ItemUseSpeedComponent());
-        itemUseSpeed.multiplier = magnitude;
+        itemUseSpeed.multiplier = context.magnitude;
         return itemUseSpeed;
     }
 
     @Override
-    protected ItemUseSpeedComponent updateComponent(OnEffectModifyEvent event, ItemUseSpeedComponent component) {
+    protected ItemUseSpeedComponent updateComponent(OnEffectModifyEvent event, ItemUseSpeedComponent component,
+                                                    final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }

@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -33,15 +34,16 @@ public class MultiJumpAlterationEffect extends ComponentBasedAlterationEffect<Mu
     }
 
     @Override
-    protected MultiJumpComponent upsertComponent(Optional<MultiJumpComponent> maybeComponent, float magnitude,
-                                                 long duration) {
+    protected MultiJumpComponent upsertComponent(Optional<MultiJumpComponent> maybeComponent,
+                                                 final EffectContext context) {
         MultiJumpComponent multiJump = maybeComponent.orElse(new MultiJumpComponent());
-        multiJump.multiplier = magnitude;
+        multiJump.multiplier = context.magnitude;
         return multiJump;
     }
 
     @Override
-    protected MultiJumpComponent updateComponent(OnEffectModifyEvent event, MultiJumpComponent component) {
+    protected MultiJumpComponent updateComponent(OnEffectModifyEvent event, MultiJumpComponent component,
+                                                 final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }

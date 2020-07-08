@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.decover;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -38,13 +39,13 @@ public class DecoverAlterationEffect extends ComponentBasedAlterationEffect<Deco
     }
 
     @Override
-    protected DecoverComponent upsertComponent(Optional<DecoverComponent> maybeComponent, float magnitude,
-                                               long duration) {
+    protected DecoverComponent upsertComponent(Optional<DecoverComponent> maybeComponent, final EffectContext context) {
         return maybeComponent.orElse(new DecoverComponent());
     }
 
     @Override
-    protected DecoverComponent updateComponent(OnEffectModifyEvent event, DecoverComponent component) {
+    protected DecoverComponent updateComponent(OnEffectModifyEvent event, DecoverComponent component,
+                                               final EffectContext context) {
         return component;
     }
 }

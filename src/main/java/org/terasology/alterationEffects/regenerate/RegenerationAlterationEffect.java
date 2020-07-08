@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 import org.terasology.engine.Time;
@@ -46,16 +47,17 @@ public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect
     }
 
     @Override
-    protected RegenerationComponent upsertComponent(Optional<RegenerationComponent> maybeComponent, float magnitude,
-                                                    long duration) {
+    protected RegenerationComponent upsertComponent(Optional<RegenerationComponent> maybeComponent,
+                                                    final EffectContext context) {
         RegenerationComponent component = maybeComponent.orElse(new RegenerationComponent());
-        component.regenerationAmount = TeraMath.floorToInt(magnitude);
+        component.regenerationAmount = TeraMath.floorToInt(context.magnitude);
         component.lastRegenerationTime = time.getGameTimeInMs();
         return component;
     }
 
     @Override
-    protected RegenerationComponent updateComponent(OnEffectModifyEvent event, RegenerationComponent component) {
+    protected RegenerationComponent updateComponent(OnEffectModifyEvent event, RegenerationComponent component,
+                                                    final EffectContext context) {
         component.regenerationAmount = (int) event.getMagnitudeResultValue();
         return component;
     }

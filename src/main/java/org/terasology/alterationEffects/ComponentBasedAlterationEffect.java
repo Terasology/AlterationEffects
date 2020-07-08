@@ -13,24 +13,22 @@ import java.util.Optional;
 public abstract class ComponentBasedAlterationEffect<C extends Component> implements AlterationEffect {
 
     private final DelayManager delayManager;
-    private final Class<C> componentClass;
+    protected final Class<C> componentClass;
     private final String effectId;
 
-    //TODO: this could be
-    //  (Context, Class<C>, String, BiFunction<Optional<C>, EffectContext, C>, BiFunction<OnEffectModifyEvent, C, C>)
     public ComponentBasedAlterationEffect(Context context, Class<C> componentClass, String effectIdentifier) {
         this.delayManager = context.get(DelayManager.class);
         this.componentClass = componentClass;
         this.effectId = effectIdentifier;
     }
 
-    //TODO: this could be a
-    //  BiFunction<Optional<C>, EffectContext, C>
-    protected abstract C upsertComponent(Optional<C> maybeComponent, float magnitude, long duration);
+    protected abstract C upsertComponent(Optional<C> maybeComponent, final EffectContext context);
 
-    //TODO this could be a
-    //  BiFunction<OnEffectModifyEvent, C, C>
-    protected abstract C updateComponent(OnEffectModifyEvent event, C component);
+    protected abstract C updateComponent(OnEffectModifyEvent event, C component, final EffectContext context);
+
+    protected void removeComponent(final EffectContext context) {
+        context.entity.removeComponent(componentClass);
+    }
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, float magnitude, long duration) {
@@ -39,8 +37,10 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
 
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
-        //TODO: why pass magnitude and duration here instead of using it in the event
-        entity.upsertComponent(componentClass, maybeComponent -> upsertComponent(maybeComponent, magnitude, duration));
+        final EffectContext context = new EffectContext(instigator, entity, id, magnitude, duration);
+        //TODO: who should be responsible for setting base magnitude and duration?
+        //      can we just pass it with OnEffectModifyEvent?
+        entity.upsertComponent(componentClass, maybeComponent -> upsertComponent(maybeComponent, context));
 
         // 2. send OnEffectModifyEvent
         OnEffectModifyEvent effectModifyEvent = entity.send(
@@ -50,12 +50,12 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
         long modifiedDuration = 0;
         boolean modifiersFound = false;
 
-        // If the effect modify event is consumed, don't apply this walk speed effect.
+        // If the effect modify event is consumed, don't apply this walk speed effect.meute
         if (!effectModifyEvent.isConsumed()) {
             modifiedDuration = effectModifyEvent.getShortestDuration();
 
             if (!effectModifyEvent.getDurationModifiers().isEmpty() && !effectModifyEvent.getMagnitudeModifiers().isEmpty()) {
-                entity.updateComponent(componentClass, c -> updateComponent(effectModifyEvent, c));
+                entity.updateComponent(componentClass, c -> updateComponent(effectModifyEvent, c, context));
                 modifiersFound = true;
             }
         }
@@ -78,7 +78,7 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
             // Otherwise, if there are either no modifiers found, or none of the modifiers collected in the event
             // have infinite
             // duration, remove the component associated with this walk speed effect.
-            entity.removeComponent(componentClass);
+            removeComponent(context);
         }
         // If this point is reached and none of the above if-clauses were met, that means there was at least one
         // modifier

@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -32,13 +33,15 @@ public class SwimSpeedAlterationEffect extends ComponentBasedAlterationEffect<Sw
         super(context, SwimSpeedComponent.class, AlterationEffects.SWIM_SPEED);
     }
 
-    protected SwimSpeedComponent upsertComponent(Optional<SwimSpeedComponent> maybeComponent, float magnitude, long duration) {
+    protected SwimSpeedComponent upsertComponent(Optional<SwimSpeedComponent> maybeComponent,
+                                                 final EffectContext context) {
         SwimSpeedComponent swimSpeed = maybeComponent.orElse(new SwimSpeedComponent());
-        swimSpeed.multiplier = magnitude;
+        swimSpeed.multiplier = context.magnitude;
         return swimSpeed;
     }
 
-    protected SwimSpeedComponent updateComponent(OnEffectModifyEvent event, SwimSpeedComponent component) {
+    protected SwimSpeedComponent updateComponent(OnEffectModifyEvent event, SwimSpeedComponent component,
+                                                 final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }

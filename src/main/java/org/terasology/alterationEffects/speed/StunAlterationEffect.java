@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -32,12 +33,13 @@ public class StunAlterationEffect extends ComponentBasedAlterationEffect<StunCom
     }
 
     @Override
-    protected StunComponent upsertComponent(Optional<StunComponent> maybeComponent, float magnitude, long duration) {
+    protected StunComponent upsertComponent(Optional<StunComponent> maybeComponent, final EffectContext context) {
         return maybeComponent.orElse(new StunComponent());
     }
 
     @Override
-    protected StunComponent updateComponent(OnEffectModifyEvent event, StunComponent component) {
+    protected StunComponent updateComponent(OnEffectModifyEvent event, StunComponent component,
+                                            final EffectContext context) {
         return component;
     }
 }

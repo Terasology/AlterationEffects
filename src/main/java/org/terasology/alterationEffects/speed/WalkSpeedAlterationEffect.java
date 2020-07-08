@@ -17,6 +17,7 @@ package org.terasology.alterationEffects.speed;
 
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
+import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
 
@@ -32,14 +33,15 @@ public class WalkSpeedAlterationEffect extends ComponentBasedAlterationEffect<Wa
         super(context, WalkSpeedComponent.class, AlterationEffects.WALK_SPEED);
     }
 
-    protected WalkSpeedComponent upsertComponent(Optional<WalkSpeedComponent> maybeComponent, float magnitude,
-                                                 long duration) {
+    protected WalkSpeedComponent upsertComponent(Optional<WalkSpeedComponent> maybeComponent,
+                                                 final EffectContext context) {
         WalkSpeedComponent walkSpeed = maybeComponent.orElse(new WalkSpeedComponent());
-        walkSpeed.multiplier = magnitude;
+        walkSpeed.multiplier = context.magnitude;
         return walkSpeed;
     }
 
-    protected WalkSpeedComponent updateComponent(OnEffectModifyEvent event, WalkSpeedComponent component) {
+    protected WalkSpeedComponent updateComponent(OnEffectModifyEvent event, WalkSpeedComponent component,
+                                                 final EffectContext context) {
         component.multiplier = event.getMagnitudeResultValue();
         return component;
     }
