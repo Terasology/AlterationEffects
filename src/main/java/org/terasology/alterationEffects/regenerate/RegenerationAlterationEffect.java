@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.alterationEffects.AlterationEffects;
@@ -74,9 +61,17 @@ public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect
      */
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
-        //TODO: what is happening here? why is this commented? how does it related to the code above?
+        //TODO: this is supposed to be the "new" implementation with the approach above being deprecated
         //applyEffect(instigator, entity, magnitude, duration);
         if (magnitude != 0) {
+            //FIXME(skaldarnar): We blindly set the "end time" of the regen effect to "duration" - that looks wrong.
+            //                   On a deeper look into RegenAuthoritySystem the "end time" is interpreted as
+            //                   duration, though.
+            //FIXME(skaldarnar): "duration" may be -1 to indicated DURATION_INDEFINITE - how does that translate to the
+            //                   regen event we are sending here?
+            //                   Actually, -1 has a special meaning for the regen effect, but it is different from the
+            //                   semantic in alteration effects: heal until the entity has restored full health as
+            //                   opposed to heal indefinitely
             entity.send(new ActivateRegenEvent(id, magnitude, ((float) duration) / 1000));
         }
     }
