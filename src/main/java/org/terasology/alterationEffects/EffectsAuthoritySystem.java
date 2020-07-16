@@ -15,6 +15,7 @@
  */
 package org.terasology.alterationEffects;
 
+import com.google.common.base.Preconditions;
 import org.terasology.alterationEffects.boost.HealthBoostAlterationEffect;
 import org.terasology.alterationEffects.boost.HealthBoostComponent;
 import org.terasology.alterationEffects.breath.WaterBreathingAlterationEffect;
@@ -42,9 +43,12 @@ import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
 import org.terasology.registry.In;
+import org.terasology.registry.Share;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +59,8 @@ import java.util.regex.Pattern;
  * the more complex effects that require more than just simply removing the effect component from the entity and
  * informing other systems.
  */
-@RegisterSystem
+@RegisterSystem(RegisterMode.AUTHORITY)
+@Share(value = EffectsAuthoritySystem.class)
 public class EffectsAuthoritySystem extends BaseComponentSystem {
     /** This will store the mapping of the effect constants to the effect components. */
     private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
@@ -142,5 +147,10 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
                 alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
             }
         }
+    }
+
+    public AlterationEffect getEffect(final String effectId) {
+        Preconditions.checkArgument(alterationEffects.containsKey(effectId), "Unknown effect ID.");
+        return alterationEffects.get(effectId);
     }
 }
