@@ -6,7 +6,8 @@
     "description": "Allows for applying effects to a player (or something else) that alter their base state in some fashion.",
     "dependencies": [
         { "id": "CoreAssets", "minVersion": "2.0.1" },
-        { "id": "Health", "minVersion": "1.0.0" }
+        { "id": "Health", "minVersion": "1.0.0" },
+        { "id": "ModuleTestingEnvironment", "minVersion": "0.2.2", "optional": true }
     ],
     "isServerSideOnly": false,
     "isLibrary": true
