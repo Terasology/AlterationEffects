@@ -15,11 +15,15 @@
  */
 package org.terasology.alterationEffects;
 
+import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.alterationEffects.boost.HealthBoostAlterationEffect;
 import org.terasology.alterationEffects.boost.HealthBoostComponent;
 import org.terasology.alterationEffects.breath.WaterBreathingAlterationEffect;
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
 import org.terasology.alterationEffects.decover.DecoverAlterationEffect;
+import org.terasology.alterationEffects.decover.DecoverComponent;
 import org.terasology.alterationEffects.regenerate.RegenerationAlterationEffect;
 import org.terasology.alterationEffects.regenerate.RegenerationComponent;
 import org.terasology.alterationEffects.speed.GlueAlterationEffect;
@@ -31,37 +35,48 @@ import org.terasology.alterationEffects.speed.JumpSpeedComponent;
 import org.terasology.alterationEffects.speed.MultiJumpAlterationEffect;
 import org.terasology.alterationEffects.speed.MultiJumpComponent;
 import org.terasology.alterationEffects.speed.StunAlterationEffect;
+import org.terasology.alterationEffects.speed.StunComponent;
 import org.terasology.alterationEffects.speed.SwimSpeedAlterationEffect;
 import org.terasology.alterationEffects.speed.SwimSpeedComponent;
 import org.terasology.alterationEffects.speed.WalkSpeedAlterationEffect;
 import org.terasology.alterationEffects.speed.WalkSpeedComponent;
-import org.terasology.alterationEffects.speed.StunComponent;
-import org.terasology.alterationEffects.decover.DecoverComponent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.console.commandSystem.annotations.Command;
+import org.terasology.logic.console.commandSystem.annotations.CommandParam;
+import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
+import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
+import org.terasology.registry.Share;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 /**
- * This authority system manages the expiration of the basic alteration effects. Other authority systems will handle
- * the more complex effects that require more than just simply removing the effect component from the entity and
- * informing other systems.
+ * This authority system manages the expiration of the basic alteration effects. Other authority systems will handle the
+ * more complex effects that require more than just simply removing the effect component from the entity and informing
+ * other systems.
  */
 @RegisterSystem
+@Share(EffectsAuthoritySystem.class)
 public class EffectsAuthoritySystem extends BaseComponentSystem {
-    /** This will store the mapping of the effect constants to the effect components. */
+
+    private static final Logger logger = LoggerFactory.getLogger(EffectsAuthoritySystem.class);
+    /**
+     * This will store the mapping of the effect constants to the effect components.
+     */
     private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
 
-    /** This will store the mapping of the effect constants to the alteration effects. */
-    private Map<String, AlterationEffect> alterationEffects = new HashMap<>();
+    /**
+     * This will store the mapping of the effect constants to the alteration effects.
+     */
+    public Map<String, AlterationEffect> alterationEffects = new HashMap<>();
 
     /**
      * This Context is necessary for all the AlterationEffects due to timing and use of the DelayManager.
@@ -74,37 +89,41 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
      */
     @Override
     public void initialise() {
-        effectComponents.put(AlterationEffects.WALK_SPEED, WalkSpeedComponent.class);
-        effectComponents.put(AlterationEffects.SWIM_SPEED, SwimSpeedComponent.class);
-        effectComponents.put(AlterationEffects.JUMP_SPEED, JumpSpeedComponent.class);
-        effectComponents.put(AlterationEffects.WATER_BREATHING, WaterBreathingComponent.class);
-        effectComponents.put(AlterationEffects.REGENERATION, RegenerationComponent.class);
-        effectComponents.put(AlterationEffects.MULTI_JUMP, MultiJumpComponent.class);
-        effectComponents.put(AlterationEffects.MAX_HEALTH_BOOST, HealthBoostComponent.class);
-        effectComponents.put(AlterationEffects.ITEM_USE_SPEED, ItemUseSpeedComponent.class);
-        effectComponents.put(AlterationEffects.STUN, StunComponent.class);
-        effectComponents.put(AlterationEffects.DECOVER, DecoverComponent.class);
-        effectComponents.put(AlterationEffects.GLUE, GlueComponent.class);
+        registerEffect(AlterationEffects.WALK_SPEED, WalkSpeedComponent.class, new WalkSpeedAlterationEffect(context));
+        registerEffect(AlterationEffects.SWIM_SPEED, SwimSpeedComponent.class, new SwimSpeedAlterationEffect(context));
+        registerEffect(AlterationEffects.JUMP_SPEED, JumpSpeedComponent.class, new JumpSpeedAlterationEffect(context));
+        registerEffect(AlterationEffects.WATER_BREATHING, WaterBreathingComponent.class,
+                new WaterBreathingAlterationEffect(context));
+        registerEffect(AlterationEffects.REGENERATION, RegenerationComponent.class,
+                new RegenerationAlterationEffect(context));
+        registerEffect(AlterationEffects.MULTI_JUMP, MultiJumpComponent.class, new MultiJumpAlterationEffect(context));
+        registerEffect(AlterationEffects.MAX_HEALTH_BOOST, HealthBoostComponent.class,
+                new HealthBoostAlterationEffect(context));
+        registerEffect(AlterationEffects.ITEM_USE_SPEED, ItemUseSpeedComponent.class,
+                new ItemUseSpeedAlterationEffect(context));
+        registerEffect(AlterationEffects.STUN, StunComponent.class, new StunAlterationEffect(context));
+        registerEffect(AlterationEffects.DECOVER, DecoverComponent.class, new DecoverAlterationEffect(context));
+        registerEffect(AlterationEffects.GLUE, GlueComponent.class, new GlueAlterationEffect(context));
+    }
 
-        alterationEffects.put(AlterationEffects.WALK_SPEED, new WalkSpeedAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.SWIM_SPEED, new SwimSpeedAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.JUMP_SPEED, new JumpSpeedAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.WATER_BREATHING, new WaterBreathingAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.REGENERATION, new RegenerationAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.MULTI_JUMP, new MultiJumpAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.MAX_HEALTH_BOOST, new HealthBoostAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.ITEM_USE_SPEED, new ItemUseSpeedAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.STUN, new StunAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.DECOVER, new DecoverAlterationEffect(context));
-        alterationEffects.put(AlterationEffects.GLUE, new GlueAlterationEffect(context));
+    public <T extends AlterationEffect> void registerEffect(final String id,
+                                                            final Class<? extends Component> componentType,
+                                                            final T instance) {
+        effectComponents.put(id, componentType);
+        alterationEffects.put(id, instance);
+    }
+
+    public AlterationEffect getEffect(final String effectId) {
+        Preconditions.checkArgument(alterationEffects.containsKey(effectId), "Unknown effect ID.");
+        return alterationEffects.get(effectId);
     }
 
     /**
      * Once a basic effect's duration has expired, remove the effect from the entity that had it, send a removal event,
      * informing the other effect systems, and then re-apply the associated alteration effect.
      *
-     * @param event     Event with information of what particular effect expired.
-     * @param entity    The entity that had the expired effect.
+     * @param event Event with information of what particular effect expired.
+     * @param entity The entity that had the expired effect.
      */
     @ReceiveEvent
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
@@ -112,35 +131,54 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
 
         // First, make sure this expired event is actually part of the AlterationEffects module.
         if (actionId.startsWith(AlterationEffects.EXPIRE_TRIGGER_PREFIX)) {
-            // Remove the expire trigger prefix and store the resultant String into effectNamePlusID.
-            String effectNamePlusID = actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length());
-
-            // Split the effectNamePlusID into two parts. The first part will contain the AlterationEffect's name, and
-            // the second part will contain the effectID.
-            String[] parts = effectNamePlusID.split(Pattern.quote("|"), 2);
-
-            // If there are two items in the parts, set the effectID accordingly.
-            String effectID = "";
-            if (parts.length == 2) {
-                effectID = parts[1];
-            }
-
-            // Set the effectName using the first String in the parts array.
-            String effectName = parts[0];
+            // Remove the expire trigger prefix
+            EffectIdentifier effect =
+                    EffectIdentifier.fromString(actionId.substring(AlterationEffects.EXPIRE_TRIGGER_PREFIX.length()));
 
             // If this DelayedActionTriggeredEvent corresponds to one of the basic alteration effects.
-            final Class<? extends Component> component = effectComponents.get(effectName);
+            final Class<? extends Component> component = effectComponents.get(effect.name);
             if (component != null) {
                 // Remove the component corresponding to this particular effect.
                 entity.removeComponent(component);
 
                 // Send out an event alerting the other effect-related systems that this effect has been removed.
-                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, "", true));
+                //TODO: parse the individual effect id from the action id
+                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effect.name), effect.name,
+                        effect.id, true));
 
                 // Re-apply this effect so that if there are any modifiers still in effect, they'll be recalculated and
                 // reapplied to the entity correctly.
-                alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
+                entity.send(new RecalculateEffect(effect));
+            } else {
+                logger.warn("Unknown alteration effect '{}' expired! Unable to remove effect.", effect);
             }
         }
+    }
+
+    @ReceiveEvent
+    public void recalculateEffects(RecalculateEffect event, EntityRef entity) {
+        for (EffectIdentifier effect : event.getEffects()) {
+            alterationEffects.get(effect.name).applyEffect(entity, entity);
+        }
+    }
+
+    @Command(value = "applyEffect", shortDescription = "apply an alteration effect to self", runOnServer = true)
+    public String effectCommand(@Sender EntityRef client,
+                                @CommandParam(value = "the effect to apply") String effectId,
+                                @CommandParam(value = "the effect magnitude (default: 3)", required = false) Integer magnitude,
+                                @CommandParam(value = "the duration in ms (default: 5000)", required = false) Long duration) {
+
+        if (!alterationEffects.containsKey(effectId)) {
+            return "ERROR: Unknown effect id!";
+        }
+
+        EntityRef player = client.getComponent(ClientComponent.class).character;
+        AlterationEffect effect = alterationEffects.get(effectId);
+
+        int m = Optional.ofNullable(magnitude).orElse(3);
+        long d = Optional.ofNullable(duration).orElse(5000L);
+
+        effect.applyEffect(player, player, m, d);
+        return "Applied effect '" + effectId + "' with a duration of " + d / 1000f + " seconds";
     }
 }
