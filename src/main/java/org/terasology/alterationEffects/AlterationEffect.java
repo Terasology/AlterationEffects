@@ -21,6 +21,11 @@ import org.terasology.entitySystem.entity.EntityRef;
  * Interface for the application of various alteration effects (with our without an ID) over a period of time.
  */
 public interface AlterationEffect {
+
+    default void applyEffect(EntityRef instigator, EntityRef entityRef) {
+        applyEffect(instigator, entityRef, 0, 0);
+    }
+
     /**
      * This will apply an effect on the given entity for the specified magnitude on a given duration of time.
      *
