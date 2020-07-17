@@ -60,7 +60,7 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
     /**
      * Hook method called whenever this effect is applied.
      * <p>
-     * Upsert denotes the the operation to either insert (i.e., create) or update the backing component. If the
+     * Upsert denotes the operation to either insert (i.e., create) or update the backing component. If the
      * component is already present on the entity the optional value will contain the component. Otherwise, it will be
      * empty.
      * <p>
@@ -99,11 +99,11 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
      * system can modify the event to change these values.
      * <p>
      * <strong>Note:</strong> Ideally, the corresponding system should act upon the {@link OnEffectModifyEvent} if the
-     * backing component is present on an entity. This should be the main method to update the entities state. If the
+     * backing component is present on an entity. This should be the main method to update the entity's state. If the
      * corresponding system does react on the event, the initial {@link #upsertComponent(Optional, EffectContext)} can
      * be limited to creating the component.
      *
-     * @param event event holding modifications to duration or magnitude by other systems
+     * @param event the event holding modifications to duration or magnitude by other systems
      * @param component the component to update
      * @param context the contextual information this effect is applied in
      * @return the updated component
