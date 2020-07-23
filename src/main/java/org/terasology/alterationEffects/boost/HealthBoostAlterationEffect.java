@@ -11,6 +11,7 @@ import org.terasology.context.Context;
 import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.health.HealthComponent;
+import org.terasology.logic.health.event.ChangeMaxHealthEvent;
 import org.terasology.math.TeraMath;
 
 import java.util.Optional;
@@ -41,14 +42,10 @@ public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<
      * @param boost The health boost component.
      */
     private void removeBoost(EntityRef entity, HealthBoostComponent boost) {
-        entity.updateComponent(HealthComponent.class, health -> {
-            // Reverse the max health boosting effect by dividing the old boost amount.
-            health.maxHealth = Math.round(health.maxHealth / (1f + 0.01f * boost.boostAmount));
-            if (health.currentHealth > health.maxHealth) {
-                health.currentHealth = health.maxHealth;
-            }
-            return health;
-        });
+        if (entity.hasComponent(HealthComponent.class)) {
+            int maxHealth = entity.getComponent(HealthComponent.class).maxHealth;
+            entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth / (1f + 0.01f * boost.boostAmount))));
+        }
     }
 
     @Override
@@ -57,6 +54,7 @@ public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<
         maybeComponent.ifPresent(c -> removeBoost(context.entity, c));
         HealthBoostComponent component = maybeComponent.orElse(new HealthBoostComponent());
         component.boostAmount = TeraMath.floorToInt(context.magnitude);
+        component.lastUseTime = time.getGameTimeInMs();
         return component;
     }
 
@@ -67,10 +65,10 @@ public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<
         component.lastUseTime = time.getGameTimeInMs();
 
         // Get the health component of this entity, and increase its max health using the health boost multiplier.
-        context.entity.updateComponent(HealthComponent.class, h -> {
-            h.maxHealth = Math.round(h.maxHealth * (1 + 0.01f * component.boostAmount));
-            return h;
-        });
+        if (context.entity.hasComponent(HealthComponent.class)) {
+            int maxHealth = context.entity.getComponent(HealthComponent.class).maxHealth;
+            context.entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth * (1 + 0.01f * component.boostAmount))));
+        }
 
         return component;
     }
