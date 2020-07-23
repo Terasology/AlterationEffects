@@ -180,7 +180,6 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
                     modifiedDuration);
         } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
             // no modifiers but positive duration and definite (and not consumed)
-          
             // add a delayed action to the DelayManager using the old system.
             delayManager.addDelayedAction(entity,
                     AlterationEffects.EXPIRE_TRIGGER_PREFIX + effectId, duration);
