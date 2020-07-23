@@ -2,13 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.boost;
 
-import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
 import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.context.Context;
-import org.terasology.engine.Time;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.health.HealthComponent;
 import org.terasology.logic.health.event.ChangeMaxHealthEvent;
@@ -20,9 +18,7 @@ import java.util.Optional;
  * This handles the application of the health boost effect, which boosts an entity's maximum health (based on the
  * magnitude) for a specified duration.
  */
-public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<HealthBoostComponent> implements AlterationEffect {
-
-    private final Time time;
+public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<HealthBoostComponent> {
 
     /**
      * Constructor. Instantiate an instance of this alteration effect using the provided context. This context will be
@@ -32,7 +28,25 @@ public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<
      */
     public HealthBoostAlterationEffect(Context context) {
         super(context, HealthBoostComponent.class, AlterationEffects.MAX_HEALTH_BOOST);
-        this.time = context.get(Time.class);
+    }
+
+    @Override
+    protected HealthBoostComponent upsertComponent(Optional<HealthBoostComponent> maybeComponent,
+                                                   EffectContext context) {
+        maybeComponent.ifPresent(c -> removeBoost(context.entity, c));
+        HealthBoostComponent component = maybeComponent.orElse(new HealthBoostComponent());
+        component.boostAmount = TeraMath.floorToInt(context.magnitude);
+        changeMaxHealth(context.entity, 1 + 0.01f * component.boostAmount);
+        return component;
+    }
+
+    @Override
+    protected HealthBoostComponent updateComponent(OnEffectModifyEvent event, HealthBoostComponent component,
+                                                   EffectContext context) {
+        removeBoost(context.entity, component);
+        component.boostAmount = TeraMath.floorToInt(event.getMagnitudeResultValue());
+        changeMaxHealth(context.entity, 1 + 0.01f * component.boostAmount);
+        return component;
     }
 
     /**
@@ -42,34 +56,13 @@ public class HealthBoostAlterationEffect extends ComponentBasedAlterationEffect<
      * @param boost The health boost component.
      */
     private void removeBoost(EntityRef entity, HealthBoostComponent boost) {
-        if (entity.hasComponent(HealthComponent.class)) {
+        changeMaxHealth(entity, 1 / (1f + 0.01f * boost.boostAmount));
+    }
+
+    private void changeMaxHealth(EntityRef entity, float amount) {
+        if (amount != 1f && entity.hasComponent(HealthComponent.class)) {
             int maxHealth = entity.getComponent(HealthComponent.class).maxHealth;
-            entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth / (1f + 0.01f * boost.boostAmount))));
+            entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth * amount)));
         }
-    }
-
-    @Override
-    protected HealthBoostComponent upsertComponent(Optional<HealthBoostComponent> maybeComponent,
-                                                   EffectContext context) {
-        maybeComponent.ifPresent(c -> removeBoost(context.entity, c));
-        HealthBoostComponent component = maybeComponent.orElse(new HealthBoostComponent());
-        component.boostAmount = TeraMath.floorToInt(context.magnitude);
-        component.lastUseTime = time.getGameTimeInMs();
-        return component;
-    }
-
-    @Override
-    protected HealthBoostComponent updateComponent(OnEffectModifyEvent event, HealthBoostComponent component,
-                                                   EffectContext context) {
-        component.boostAmount = TeraMath.floorToInt(event.getMagnitudeResultValue());
-        component.lastUseTime = time.getGameTimeInMs();
-
-        // Get the health component of this entity, and increase its max health using the health boost multiplier.
-        if (context.entity.hasComponent(HealthComponent.class)) {
-            int maxHealth = context.entity.getComponent(HealthComponent.class).maxHealth;
-            context.entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth * (1 + 0.01f * component.boostAmount))));
-        }
-
-        return component;
     }
 }

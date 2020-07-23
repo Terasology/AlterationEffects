@@ -24,6 +24,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.health.HealthComponent;
+import org.terasology.logic.health.event.ChangeMaxHealthEvent;
 import org.terasology.registry.In;
 
 /**
@@ -39,20 +40,15 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     /**
      * This will remove the health boost from an entity just before its health boost component is removed.
      *
-     * @param event     Event that indicates that the HealthBoostComponent will be deactivated and removed.
-     * @param entity    Entity that has the health boost component.
-     * @param hBoost    The health boost component. Used as delimiter/filter as well as for its sole variable.
+     * @param event Event that indicates that the HealthBoostComponent will be deactivated and removed.
+     * @param entity Entity that has the health boost component.
+     * @param hBoost The health boost component. Used as delimiter/filter as well as for its sole variable.
      */
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
-        HealthComponent h = entity.getComponent(HealthComponent.class);
-
-        // Reverse the max health boosting effect by dividing the old boost amount.
-        h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f*hBoost.boostAmount));
-
-        // If the current health is greater than the new max health, set the current health value to be the max health.
-        if (h.currentHealth > h.maxHealth) {
-            h.currentHealth = h.maxHealth;
+        if (hBoost.boostAmount != 0 && entity.hasComponent(HealthComponent.class)) {
+            int maxHealth = entity.getComponent(HealthComponent.class).maxHealth;
+            entity.send(new ChangeMaxHealthEvent(Math.round(maxHealth / (1f + 0.01f * hBoost.boostAmount))));
         }
     }
 }
