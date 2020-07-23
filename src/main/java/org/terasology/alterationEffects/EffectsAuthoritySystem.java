@@ -20,6 +20,7 @@ import org.terasology.alterationEffects.boost.HealthBoostComponent;
 import org.terasology.alterationEffects.breath.WaterBreathingAlterationEffect;
 import org.terasology.alterationEffects.breath.WaterBreathingComponent;
 import org.terasology.alterationEffects.decover.DecoverAlterationEffect;
+import org.terasology.alterationEffects.decover.DecoverComponent;
 import org.terasology.alterationEffects.regenerate.RegenerationAlterationEffect;
 import org.terasology.alterationEffects.regenerate.RegenerationComponent;
 import org.terasology.alterationEffects.speed.GlueAlterationEffect;
@@ -31,36 +32,45 @@ import org.terasology.alterationEffects.speed.JumpSpeedComponent;
 import org.terasology.alterationEffects.speed.MultiJumpAlterationEffect;
 import org.terasology.alterationEffects.speed.MultiJumpComponent;
 import org.terasology.alterationEffects.speed.StunAlterationEffect;
+import org.terasology.alterationEffects.speed.StunComponent;
 import org.terasology.alterationEffects.speed.SwimSpeedAlterationEffect;
 import org.terasology.alterationEffects.speed.SwimSpeedComponent;
 import org.terasology.alterationEffects.speed.WalkSpeedAlterationEffect;
 import org.terasology.alterationEffects.speed.WalkSpeedComponent;
-import org.terasology.alterationEffects.speed.StunComponent;
-import org.terasology.alterationEffects.decover.DecoverComponent;
 import org.terasology.context.Context;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.console.commandSystem.annotations.Command;
+import org.terasology.logic.console.commandSystem.annotations.CommandParam;
+import org.terasology.logic.console.commandSystem.annotations.Sender;
 import org.terasology.logic.delay.DelayedActionTriggeredEvent;
+import org.terasology.logic.permission.PermissionManager;
+import org.terasology.network.ClientComponent;
 import org.terasology.registry.In;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
- * This authority system manages the expiration of the basic alteration effects. Other authority systems will handle
- * the more complex effects that require more than just simply removing the effect component from the entity and
- * informing other systems.
+ * This authority system manages the expiration of the basic alteration effects. Other authority systems will handle the
+ * more complex effects that require more than just simply removing the effect component from the entity and informing
+ * other systems.
  */
 @RegisterSystem
 public class EffectsAuthoritySystem extends BaseComponentSystem {
-    /** This will store the mapping of the effect constants to the effect components. */
+    /**
+     * This will store the mapping of the effect constants to the effect components.
+     */
     private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
 
-    /** This will store the mapping of the effect constants to the alteration effects. */
+    /**
+     * This will store the mapping of the effect constants to the alteration effects.
+     */
     private Map<String, AlterationEffect> alterationEffects = new HashMap<>();
 
     /**
@@ -103,8 +113,8 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
      * Once a basic effect's duration has expired, remove the effect from the entity that had it, send a removal event,
      * informing the other effect systems, and then re-apply the associated alteration effect.
      *
-     * @param event     Event with information of what particular effect expired.
-     * @param entity    The entity that had the expired effect.
+     * @param event Event with information of what particular effect expired.
+     * @param entity The entity that had the expired effect.
      */
     @ReceiveEvent
     public void expireEffects(DelayedActionTriggeredEvent event, EntityRef entity) {
@@ -135,12 +145,32 @@ public class EffectsAuthoritySystem extends BaseComponentSystem {
                 entity.removeComponent(component);
 
                 // Send out an event alerting the other effect-related systems that this effect has been removed.
-                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, "", true));
+                entity.send(new OnEffectRemoveEvent(entity, entity, alterationEffects.get(effectName), effectID, "",
+                        true));
 
                 // Re-apply this effect so that if there are any modifiers still in effect, they'll be recalculated and
                 // reapplied to the entity correctly.
                 alterationEffects.get(effectName).applyEffect(entity, entity, 0, 0);
             }
         }
+    }
+
+    @Command(value = "applyEffect", shortDescription = "apply an alteration effect to self", runOnServer = true,
+            requiredPermission = PermissionManager.CHEAT_PERMISSION)
+    public String effectCommand(@Sender EntityRef client,
+                                @CommandParam(value = "the effect to apply") String effectId,
+                                @CommandParam(value = "the effect magnitude (default: 3)", required = false) Integer magnitude,
+                                @CommandParam(value = "the duration in ms (default: 5000)", required = false) Long duration) {
+        if (!alterationEffects.containsKey(effectId)) {
+            return "ERROR: Unknown effect id!";
+        }
+        EntityRef player = client.getComponent(ClientComponent.class).character;
+        AlterationEffect effect = alterationEffects.get(effectId);
+
+        int m = Optional.ofNullable(magnitude).orElse(3);
+        long d = Optional.ofNullable(duration).orElse(5000L);
+
+        effect.applyEffect(player, player, m, d);
+        return "Applied effect '" + effectId + "' with a duration of " + d / 1000f + " seconds";
     }
 }
