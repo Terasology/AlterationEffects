@@ -320,8 +320,7 @@ public class OnEffectModifyEvent implements ConsumableEvent {
      * @return  The result of the magnitude modifier and multiplier calculations.
      */
     public float getMagnitudeResultValue() {
-        // For now, add all modifiers and multiply by all multipliers. Negative modifiers cap to zero, but negative
-        // multipliers remain.
+        // For now, add all modifiers and multiply by all multipliers.
 
         // First add the (pre)modifiers.
         float result = baseMagnitude;
@@ -329,7 +328,6 @@ public class OnEffectModifyEvent implements ConsumableEvent {
         while (modifierIter.hasNext()) {
             result += modifierIter.next();
         }
-        result = Math.max(0, result);
 
         // Then, multiply the multipliers.
         TFloatIterator multiplierIter = magnitudeMultipliers.iterator();
