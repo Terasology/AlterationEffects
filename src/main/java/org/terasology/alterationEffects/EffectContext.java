@@ -3,7 +3,7 @@
 
 package org.terasology.alterationEffects;
 
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.entity.EntityRef;
 
 /**
  * Immutable context for implementing alteration effects.

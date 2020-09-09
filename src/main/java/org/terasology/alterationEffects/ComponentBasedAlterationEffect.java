@@ -3,10 +3,10 @@
 
 package org.terasology.alterationEffects;
 
-import org.terasology.context.Context;
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.delay.DelayManager;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.delay.DelayManager;
 
 import java.util.Optional;
 
@@ -60,9 +60,8 @@ public abstract class ComponentBasedAlterationEffect<C extends Component> implem
     /**
      * Hook method called whenever this effect is applied.
      * <p>
-     * Upsert denotes the operation to either insert (i.e., create) or update the backing component. If the
-     * component is already present on the entity the optional value will contain the component. Otherwise, it will be
-     * empty.
+     * Upsert denotes the operation to either insert (i.e., create) or update the backing component. If the component is
+     * already present on the entity the optional value will contain the component. Otherwise, it will be empty.
      * <p>
      * The effect context holds all information passed to {@link AlterationEffect#applyEffect(EntityRef, EntityRef,
      * String, float, long)}. See {@link EffectContext} for more details.

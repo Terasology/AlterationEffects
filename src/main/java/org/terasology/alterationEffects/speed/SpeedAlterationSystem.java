@@ -1,29 +1,16 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.speed;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.characters.AffectItemUseCooldownTimeEvent;
-import org.terasology.logic.characters.AffectJumpForceEvent;
-import org.terasology.logic.characters.AffectMultiJumpEvent;
-import org.terasology.logic.characters.GetMaxSpeedEvent;
-import org.terasology.logic.characters.MovementMode;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.AffectItemUseCooldownTimeEvent;
+import org.terasology.engine.logic.characters.AffectJumpForceEvent;
+import org.terasology.engine.logic.characters.AffectMultiJumpEvent;
+import org.terasology.engine.logic.characters.GetMaxSpeedEvent;
+import org.terasology.engine.logic.characters.MovementMode;
 
 /**
  * This system manages the effects of the various speed or movement-related alteration effects on entities.
@@ -34,9 +21,9 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
      * When an entity tries to move in any direction, modify the speed based on what effects are being applied to the
      * entity.
      *
-     * @param event         Stores information on what the max speed currently is and collects potential speed
-     *                      modifiers.
-     * @param entityRef     The entity trying to move.
+     * @param event Stores information on what the max speed currently is and collects potential speed
+     *         modifiers.
+     * @param entityRef The entity trying to move.
      */
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
@@ -62,8 +49,8 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     /**
      * When an entity tries to jump, modify the jump speed based on what effects are being applied to the entity.
      *
-     * @param event         Stores information on the jump force and allows other systems to modify it.
-     * @param entityRef     The entity trying to jump.
+     * @param event Stores information on the jump force and allows other systems to modify it.
+     * @param entityRef The entity trying to jump.
      */
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
@@ -87,8 +74,8 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
      * When an entity tries to jump, modify the max number jumps (before hitting the ground) based on what effects are
      * being applied to the entity.
      *
-     * @param event         Stores information on the number of jumps and allows other systems to modify it.
-     * @param entityRef     The entity trying to jump.
+     * @param event Stores information on the number of jumps and allows other systems to modify it.
+     * @param entityRef The entity trying to jump.
      */
     @ReceiveEvent
     public void modifyMultiJump(AffectMultiJumpEvent event, EntityRef entityRef) {
@@ -102,8 +89,8 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
      * When an entity tries to use an item, modify the cooldown time based on what effects are being applied to the
      * entity.
      *
-     * @param event         Stores information on the item's cooldown and allows other systems to modify it.
-     * @param entityRef     The entity trying to use an item.
+     * @param event Stores information on the item's cooldown and allows other systems to modify it.
+     * @param entityRef The entity trying to use an item.
      */
     @ReceiveEvent
     public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {

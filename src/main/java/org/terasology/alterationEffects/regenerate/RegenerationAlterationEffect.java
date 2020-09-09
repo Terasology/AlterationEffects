@@ -6,10 +6,10 @@ import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
 import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
-import org.terasology.context.Context;
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.health.event.ActivateRegenEvent;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.health.logic.event.ActivateRegenEvent;
 import org.terasology.math.TeraMath;
 
 import java.util.Optional;
