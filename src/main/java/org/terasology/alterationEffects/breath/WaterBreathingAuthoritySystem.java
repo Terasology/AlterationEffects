@@ -26,7 +26,7 @@ public class WaterBreathingAuthoritySystem extends BaseComponentSystem {
     @ReceiveEvent
     public void cancelDamageFromWater(BeforeDamagedEvent event, EntityRef entity, WaterBreathingComponent component) {
         final BlockComponent block = event.getInstigator().getComponent(BlockComponent.class);
-        if (block != null && block.block.getURI().equals(new BlockUri("CoreAssets:Water"))) {
+        if (block != null && block.getBlock().getURI().equals(new BlockUri("CoreAssets:Water"))) {
             event.consume();
         }
     }
