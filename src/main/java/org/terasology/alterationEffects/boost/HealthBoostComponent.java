@@ -23,10 +23,4 @@ import org.terasology.entitySystem.Component;
 public class HealthBoostComponent implements Component {
     /** The amount the max health should be boosted by. 1 is equivalent to +1% max health on the applied entity. */
     public int boostAmount;
-
-    /**
-     * The last time this health boost was applied on the entity. This is also modified when the effect itself is
-     * modified.
-     */
-    public long lastUseTime;
 }
