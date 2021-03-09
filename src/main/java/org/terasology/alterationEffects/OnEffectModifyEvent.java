@@ -21,8 +21,8 @@ import gnu.trove.list.TDoubleList;
 import gnu.trove.list.TFloatList;
 import gnu.trove.list.array.TDoubleArrayList;
 import gnu.trove.list.array.TFloatArrayList;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ConsumableEvent;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ConsumableEvent;
 
 /**
  * This event is sent to an entity to collect all the potential magnitude and duration modifiers for a particular

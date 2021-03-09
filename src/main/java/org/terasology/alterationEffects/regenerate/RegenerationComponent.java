@@ -15,7 +15,7 @@
  */
 package org.terasology.alterationEffects.regenerate;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * This component is used for storing the health regeneration values an entity with the regeneration effect applied has.

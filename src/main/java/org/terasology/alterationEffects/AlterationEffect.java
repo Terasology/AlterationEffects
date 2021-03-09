@@ -15,7 +15,7 @@
  */
 package org.terasology.alterationEffects;
 
-import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.entity.EntityRef;
 
 /**
  * Interface for the application of various alteration effects (with our without an ID) over a period of time.

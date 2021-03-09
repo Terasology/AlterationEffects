@@ -15,7 +15,7 @@
  */
 package org.terasology.alterationEffects.speed;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * This is the component added to entities with the swim speed effect.

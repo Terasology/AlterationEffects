@@ -6,8 +6,8 @@ import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
 import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
-import org.terasology.context.Context;
-import org.terasology.logic.delay.DelayManager;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.logic.delay.DelayManager;
 
 import java.util.Optional;
 

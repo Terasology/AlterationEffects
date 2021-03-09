@@ -15,7 +15,7 @@
  */
 package org.terasology.alterationEffects.resist;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 import java.util.HashMap;
 import java.util.Map;

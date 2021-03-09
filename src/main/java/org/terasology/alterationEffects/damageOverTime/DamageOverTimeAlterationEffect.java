@@ -18,14 +18,12 @@ package org.terasology.alterationEffects.damageOverTime;
 import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
-import org.terasology.alterationEffects.speed.WalkSpeedComponent;
-import org.terasology.context.Context;
-import org.terasology.engine.Time;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.delay.DelayManager;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.core.Time;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.math.TeraMath;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

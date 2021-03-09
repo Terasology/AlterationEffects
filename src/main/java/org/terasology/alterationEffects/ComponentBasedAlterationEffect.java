@@ -3,10 +3,10 @@
 
 package org.terasology.alterationEffects;
 
-import org.terasology.context.Context;
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.delay.DelayManager;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.delay.DelayManager;
 
 import java.util.Optional;
 

@@ -15,7 +15,7 @@
  */
 package org.terasology.alterationEffects.speed;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /** Meant to represent a stickying effect of some sort, as if stuck in a spiderweb. */
 public class GlueComponent implements Component {

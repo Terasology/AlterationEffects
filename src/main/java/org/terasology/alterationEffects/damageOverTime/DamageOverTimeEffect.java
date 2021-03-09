@@ -15,7 +15,6 @@
  */
 package org.terasology.alterationEffects.damageOverTime;
 
-import org.terasology.entitySystem.Component;
 import org.terasology.reflection.MappedContainer;
 
 /**

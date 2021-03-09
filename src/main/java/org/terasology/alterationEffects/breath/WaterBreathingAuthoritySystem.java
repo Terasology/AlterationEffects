@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.breath;
 
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.health.event.BeforeDamagedEvent;
-import org.terasology.world.block.BlockComponent;
-import org.terasology.world.block.BlockUri;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.health.event.BeforeDamagedEvent;
+import org.terasology.engine.world.block.BlockComponent;
+import org.terasology.engine.world.block.BlockUri;
 
 /**
  * This authority system manages all the water breathing effects currently in-effect across all entities.
