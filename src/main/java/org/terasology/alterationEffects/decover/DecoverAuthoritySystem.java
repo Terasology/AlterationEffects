@@ -20,7 +20,7 @@ import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
-import org.terasology.engine.logic.health.event.BeforeRestoreEvent;
+import org.terasology.logic.health.event.BeforeRestoreEvent;
 
 /**
  * This authority system handles events for entities with the decover effect.

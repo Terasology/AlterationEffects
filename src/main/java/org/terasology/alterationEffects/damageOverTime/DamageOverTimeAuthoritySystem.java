@@ -27,8 +27,8 @@ import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.engine.logic.health.HealthComponent;
-import org.terasology.engine.logic.health.event.DoDamageEvent;
+import org.terasology.logic.health.HealthComponent;
+import org.terasology.logic.health.event.DoDamageEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.utilities.Assets;
 
