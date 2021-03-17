@@ -22,7 +22,7 @@ import org.terasology.engine.context.Context;
 import org.terasology.engine.core.Time;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.logic.delay.DelayManager;
-import org.terasology.engine.logic.health.HealthComponent;
+import org.terasology.logic.health.HealthComponent;
 import org.terasology.math.TeraMath;
 
 /**
