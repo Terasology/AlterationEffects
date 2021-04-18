@@ -9,7 +9,7 @@ import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.engine.context.Context;
 import org.terasology.engine.core.Time;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.logic.health.event.ActivateRegenEvent;
+import org.terasology.module.health.events.ActivateRegenEvent;
 import org.terasology.math.TeraMath;
 
 import java.util.Optional;
