@@ -9,8 +9,9 @@ import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.engine.context.Context;
 import org.terasology.engine.core.Time;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.module.health.events.ActivateRegenEvent;
+import org.terasology.gestalt.naming.Name;
 import org.terasology.math.TeraMath;
+import org.terasology.module.health.events.ActivateRegenEvent;
 
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ import java.util.Optional;
  * second for a specified duration.
  */
 public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect<RegenerationComponent> {
+
+    public static final Name REGEN_EFFECT_ID = new Name("alternation:regeneration");
 
     private final Time time;
 
@@ -62,14 +65,9 @@ public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect
     @Override
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //TODO: this is supposed to be the "new" implementation with the approach above being deprecated
-        //applyEffect(instigator, entity, magnitude, duration);
+        super.applyEffect(instigator, entity, id, magnitude, duration);
         if (magnitude != 0) {
-            //FIXME(skaldarnar): "duration" may be -1 to indicated DURATION_INDEFINITE - how does that translate to the
-            //                   regen event we are sending here?
-            //                   Actually, -1 has a special meaning for the regen effect, but it is different from the
-            //                   semantic in alteration effects: heal until the entity has restored full health as
-            //                   opposed to heal indefinitely
-            entity.send(new ActivateRegenEvent(id, magnitude, ((float) duration) / 1000));
+            entity.send(new ActivateRegenEvent(REGEN_EFFECT_ID.toString(), magnitude, ((float) duration) / 1000));
         }
     }
 }

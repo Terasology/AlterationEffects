@@ -16,6 +16,10 @@
 package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.naming.Name;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This component is used for storing the health regeneration values an entity with the regeneration effect applied has.
@@ -26,4 +30,7 @@ public class RegenerationComponent implements Component {
 
     /** The last time this entity regenerated health via the regen effect. */
     public long lastRegenerationTime;
+
+    /**  */
+    public Map<Name, Integer> activeRegenerations = new HashMap<>();
 }
