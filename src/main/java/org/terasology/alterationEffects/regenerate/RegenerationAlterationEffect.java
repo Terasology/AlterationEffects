@@ -12,6 +12,7 @@ import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.gestalt.naming.Name;
 import org.terasology.math.TeraMath;
 import org.terasology.module.health.events.RegisterRegenEvent;
+import org.terasology.module.health.time.Duration;
 
 import java.util.Optional;
 
@@ -66,6 +67,6 @@ public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //TODO: this is supposed to be the "new" implementation with the approach above being deprecated
         super.applyEffect(instigator, entity, id, magnitude, duration);
-        entity.send(new RegisterRegenEvent(REGEN_EFFECT_ID.toString(), ((float) duration) / 1000));
+        entity.send(new RegisterRegenEvent(REGEN_EFFECT_ID, Duration.fromMillis(duration)));
     }
 }
