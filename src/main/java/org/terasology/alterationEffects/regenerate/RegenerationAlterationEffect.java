@@ -66,8 +66,6 @@ public class RegenerationAlterationEffect extends ComponentBasedAlterationEffect
     public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration) {
         //TODO: this is supposed to be the "new" implementation with the approach above being deprecated
         super.applyEffect(instigator, entity, id, magnitude, duration);
-        if (magnitude != 0) {
-            entity.send(new RegisterRegenEvent(REGEN_EFFECT_ID.toString(), magnitude, ((float) duration) / 1000));
-        }
+        entity.send(new RegisterRegenEvent(REGEN_EFFECT_ID.toString(), ((float) duration) / 1000));
     }
 }
