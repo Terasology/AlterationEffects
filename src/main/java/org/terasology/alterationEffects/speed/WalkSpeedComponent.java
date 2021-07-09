@@ -1,29 +1,21 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.speed;
 
-import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
  * This is the component added to entities with the walk speed effect.
  */
-public class WalkSpeedComponent implements Component {
+public class WalkSpeedComponent implements Component<WalkSpeedComponent> {
     /**
      * This affects how much the base walk speed is multiplied by. 1 is normal speed, 0 is immobility, and 2 is double
      * speed.
      */
     public float multiplier;
+
+    @Override
+    public void copy(WalkSpeedComponent other) {
+        this.multiplier = other.multiplier;
+    }
 }

@@ -1,21 +1,8 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.resist;
 
-import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +10,19 @@ import java.util.Map;
 /**
  * This component is used for keeping track of the various resist damage effects an entity can have currently in effect.
  */
-public class ResistDamageComponent implements Component {
+public class ResistDamageComponent implements Component<ResistDamageComponent> {
     /** This map keeps track of the various damage resist effects currently in effect. */
-    public Map<String, ResistDamageEffect> rdes = new HashMap<String, ResistDamageEffect>();
+    public Map<String, ResistDamageEffect> rdes = new HashMap<>();
+
+    @Override
+    public void copy(ResistDamageComponent other) {
+        this.rdes.clear();
+        for (Map.Entry<String, ResistDamageEffect> entry : other.rdes.entrySet()) {
+            ResistDamageEffect value = entry.getValue();
+            ResistDamageEffect resistDamageEffect = new ResistDamageEffect();
+            resistDamageEffect.resistAmount = value.resistAmount;
+            resistDamageEffect.resistType = value.resistType;
+            this.rdes.put(entry.getKey(), resistDamageEffect);
+        }
+    }
 }
