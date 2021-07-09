@@ -1,12 +1,12 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.alterationEffects;
 
 import org.terasology.engine.context.Context;
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.logic.delay.DelayManager;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.Optional;
 
