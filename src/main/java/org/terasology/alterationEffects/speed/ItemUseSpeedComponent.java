@@ -17,7 +17,7 @@ public class ItemUseSpeedComponent implements Component<ItemUseSpeedComponent> {
     public float multiplier;
 
     @Override
-    public void copy(ItemUseSpeedComponent other) {
+    public void copyFrom(ItemUseSpeedComponent other) {
         this.modifier = other.modifier;
         this.multiplier = other.multiplier;
     }

@@ -20,7 +20,7 @@ public class DamageOverTimeComponent implements Component<DamageOverTimeComponen
     public Map<String, Map<String, Boolean>> effectIDMap = new HashMap<String, Map<String, Boolean>>();
 
     @Override
-    public void copy(DamageOverTimeComponent other) {
+    public void copyFrom(DamageOverTimeComponent other) {
         dots.clear();
         other.dots.forEach((k, v) -> this.dots.put(k, v.copy()));
         effectIDMap.clear();

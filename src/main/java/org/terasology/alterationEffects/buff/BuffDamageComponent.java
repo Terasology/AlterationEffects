@@ -15,7 +15,7 @@ public class BuffDamageComponent implements Component<BuffDamageComponent> {
     public Map<String, BuffDamageEffect> bdes = new HashMap<String, BuffDamageEffect>();
 
     @Override
-    public void copy(BuffDamageComponent other) {
+    public void copyFrom(BuffDamageComponent other) {
         bdes.clear();
         other.bdes.forEach((k, v)-> this.bdes.put(k, v.copy()));
     }

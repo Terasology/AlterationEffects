@@ -14,7 +14,7 @@ public class MultiJumpComponent implements Component<MultiJumpComponent> {
     public float multiplier;
 
     @Override
-    public void copy(MultiJumpComponent other) {
+    public void copyFrom(MultiJumpComponent other) {
         this.modifier = other.modifier;
         this.multiplier = other.multiplier;
     }

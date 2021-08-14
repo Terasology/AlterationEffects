@@ -15,7 +15,7 @@ public class ResistDamageComponent implements Component<ResistDamageComponent> {
     public Map<String, ResistDamageEffect> rdes = new HashMap<>();
 
     @Override
-    public void copy(ResistDamageComponent other) {
+    public void copyFrom(ResistDamageComponent other) {
         this.rdes.clear();
         for (Map.Entry<String, ResistDamageEffect> entry : other.rdes.entrySet()) {
             ResistDamageEffect value = entry.getValue();

@@ -15,7 +15,7 @@ public class WalkSpeedComponent implements Component<WalkSpeedComponent> {
     public float multiplier;
 
     @Override
-    public void copy(WalkSpeedComponent other) {
+    public void copyFrom(WalkSpeedComponent other) {
         this.multiplier = other.multiplier;
     }
 }

@@ -15,7 +15,7 @@ public class SwimSpeedComponent implements Component<SwimSpeedComponent> {
     public float multiplier;
 
     @Override
-    public void copy(SwimSpeedComponent other) {
+    public void copyFrom(SwimSpeedComponent other) {
         this.multiplier = other.multiplier;
     }
 }

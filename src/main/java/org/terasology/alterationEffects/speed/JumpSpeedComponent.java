@@ -17,7 +17,7 @@ public class JumpSpeedComponent implements Component<JumpSpeedComponent> {
     public float multiplier;
 
     @Override
-    public void copy(JumpSpeedComponent other) {
+    public void copyFrom(JumpSpeedComponent other) {
         this.modifier = other.modifier;
         this.multiplier = other.multiplier;
     }

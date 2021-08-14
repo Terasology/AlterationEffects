@@ -23,7 +23,7 @@ public class RegenerationComponent implements Component<RegenerationComponent> {
     public Map<Name, Integer> activeRegenerations = new HashMap<>();
 
     @Override
-    public void copy(RegenerationComponent other) {
+    public void copyFrom(RegenerationComponent other) {
         this.regenerationAmount = other.regenerationAmount;
         this.lastRegenerationTime = other.lastRegenerationTime;
         this.activeRegenerations = Maps.newHashMap(other.activeRegenerations);

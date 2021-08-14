@@ -10,7 +10,7 @@ public class GlueComponent implements Component<GlueComponent> {
     public float multiplier;
 
     @Override
-    public void copy(GlueComponent other) {
+    public void copyFrom(GlueComponent other) {
         this.multiplier = other.multiplier;
     }
 }

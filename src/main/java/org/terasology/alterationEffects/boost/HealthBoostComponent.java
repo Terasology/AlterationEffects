@@ -18,7 +18,7 @@ public class HealthBoostComponent implements Component<HealthBoostComponent> {
     public long lastUseTime;
 
     @Override
-    public void copy(HealthBoostComponent other) {
+    public void copyFrom(HealthBoostComponent other) {
         this.boostAmount = other.boostAmount;
         this.lastUseTime = other.lastUseTime;
     }
