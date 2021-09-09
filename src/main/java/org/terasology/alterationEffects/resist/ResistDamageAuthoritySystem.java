@@ -26,8 +26,8 @@ import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.module.health.events.BeforeDamagedEvent;
 import org.terasology.engine.registry.In;
+import org.terasology.module.health.events.BeforeDamagedEvent;
 
 import java.util.regex.Pattern;
 

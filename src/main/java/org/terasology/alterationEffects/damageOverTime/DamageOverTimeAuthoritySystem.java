@@ -27,10 +27,10 @@ import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.entitySystem.systems.UpdateSubscriberSystem;
 import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.module.health.components.HealthComponent;
-import org.terasology.module.health.events.DoDamageEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.utilities.Assets;
+import org.terasology.module.health.components.HealthComponent;
+import org.terasology.module.health.events.DoDamageEvent;
 
 import java.util.regex.Pattern;
 

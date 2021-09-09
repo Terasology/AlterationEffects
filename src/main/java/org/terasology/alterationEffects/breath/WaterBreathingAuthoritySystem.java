@@ -7,9 +7,9 @@ import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
-import org.terasology.module.health.events.BeforeDamagedEvent;
 import org.terasology.engine.world.block.BlockComponent;
 import org.terasology.engine.world.block.BlockUri;
+import org.terasology.module.health.events.BeforeDamagedEvent;
 
 /**
  * This authority system manages all the water breathing effects currently in-effect across all entities.
