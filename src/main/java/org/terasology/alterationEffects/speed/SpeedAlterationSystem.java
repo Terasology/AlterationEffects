@@ -16,7 +16,6 @@
 package org.terasology.alterationEffects.speed;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.characters.AffectItemUseCooldownTimeEvent;
@@ -24,6 +23,7 @@ import org.terasology.engine.logic.characters.AffectJumpForceEvent;
 import org.terasology.engine.logic.characters.AffectMultiJumpEvent;
 import org.terasology.engine.logic.characters.GetMaxSpeedEvent;
 import org.terasology.engine.logic.characters.MovementMode;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 
 /**
  * This system manages the effects of the various speed or movement-related alteration effects on entities.

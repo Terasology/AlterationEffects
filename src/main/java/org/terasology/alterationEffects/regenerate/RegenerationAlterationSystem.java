@@ -4,9 +4,9 @@
 package org.terasology.alterationEffects.regenerate;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.module.health.events.BeforeRegenEvent;
 
 import static org.terasology.alterationEffects.regenerate.RegenerationAlterationEffect.REGEN_EFFECT_ID;
