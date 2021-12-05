@@ -13,10 +13,14 @@ import java.util.Map;
  * in effect.
  */
 public class DamageOverTimeComponent implements Component<DamageOverTimeComponent> {
-    /** This map keeps track of the various DOT effects currently in effect. */
+    /**
+     * This map keeps track of the various DOT effects currently in effect.
+     */
     public Map<String, DamageOverTimeEffect> dots = new HashMap<String, DamageOverTimeEffect>();
 
-    /** This map keeps track of all the effectIDs of all the current DOT effects being applied to an entity. */
+    /**
+     * This map keeps track of all the effectIDs of all the current DOT effects being applied to an entity.
+     */
     public Map<String, Map<String, Boolean>> effectIDMap = new HashMap<String, Map<String, Boolean>>();
 
     @Override

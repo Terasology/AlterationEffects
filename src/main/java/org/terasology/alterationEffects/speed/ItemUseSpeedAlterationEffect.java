@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.speed;
 
@@ -7,7 +7,6 @@ import org.terasology.alterationEffects.ComponentBasedAlterationEffect;
 import org.terasology.alterationEffects.EffectContext;
 import org.terasology.alterationEffects.OnEffectModifyEvent;
 import org.terasology.engine.context.Context;
-import org.terasology.engine.logic.delay.DelayManager;
 
 import java.util.Optional;
 
@@ -17,11 +16,9 @@ import java.util.Optional;
  */
 public class ItemUseSpeedAlterationEffect extends ComponentBasedAlterationEffect<ItemUseSpeedComponent> {
 
-    private DelayManager delayManager;
-
     /**
-     * Constructor. Instantiate an instance of this alteration effect using the provided context. This context will be
-     * used to get the DelayManager.
+     * Constructor. Instantiate an instance of this alteration effect using the provided context. This context will be used to get the
+     * DelayManager.
      *
      * @param context The context which this effect will be executed on.
      */
