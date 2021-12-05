@@ -9,10 +9,14 @@ import org.terasology.reflection.MappedContainer;
  */
 @MappedContainer
 public class BuffDamageEffect {
-    /** The damage type that will be buffed. */
+    /**
+     * The damage type that will be buffed.
+     */
     public String damageType;
 
-    /** The amount that the damage of this type will be additively increased or buffed by. */
+    /**
+     * The amount that the damage to this type will be additively increased or buffed by.
+     */
     public int buffAmount;
 
     BuffDamageEffect copy() {

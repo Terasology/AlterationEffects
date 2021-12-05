@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.speed;
 
@@ -17,8 +17,8 @@ import java.util.Optional;
 public class JumpSpeedAlterationEffect extends ComponentBasedAlterationEffect<JumpSpeedComponent> {
 
     /**
-     * Constructor. Instantiate an instance of this alteration effect using the provided context. This context will be
-     * used to get the DelayManager.
+     * Constructor. Instantiate an instance of this alteration effect using the provided context. This context will be used to get the
+     * DelayManager.
      *
      * @param context The context which this effect will be executed on.
      */

@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.buff;
 
 import org.terasology.alterationEffects.AlterationEffects;
@@ -38,19 +25,15 @@ import java.util.regex.Pattern;
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class BuffDamageAuthoritySystem extends BaseComponentSystem {
     @In
-    private Time time;
-    @In
-    private EntityManager entityManager;
-    @In
     private Context context;
 
     /**
-     * When one of this entity's buff damage effects expire, remove it from the damage buff effects map and
-     * recalculate the total magnitude for this damage type.
+     * When one of this entity's buff damage effects expire, remove it from the damage buff effects map and recalculate the total magnitude
+     * for this damage type.
      *
-     * @param event         Event that indicates that the delayed action has expired.
-     * @param entity        Entity that has the buff damage component.
-     * @param component     Stores information of all the entity's current damage buffs.
+     * @param event Event that indicates that the delayed action has expired.
+     * @param entity Entity that has the buff damage component.
+     * @param component Stores information of all the entity's current damage buffs.
      */
     @ReceiveEvent
     public void expireBuffDamageEffect(DelayedActionTriggeredEvent event, EntityRef entity, BuffDamageComponent component) {
@@ -100,7 +83,7 @@ public class BuffDamageAuthoritySystem extends BaseComponentSystem {
 
                 // If the size of the damage buffs map is zero and the buff damage component doesn't exist
                 // anymore, remove it from the entity.
-                if (component.bdes.size() == 0 && component != null) {
+                if (component.bdes.size() == 0) {
                     entity.removeComponent(BuffDamageComponent.class);
                 }
             }
@@ -108,12 +91,12 @@ public class BuffDamageAuthoritySystem extends BaseComponentSystem {
     }
 
     /**
-     * Upon getting a damage event and the entity on the sending end has a damage buff, check to see if the incoming
-     * damage type matches the buff's type. If so, increase the damage by the buff's amount.
+     * Upon getting a damage event and the entity on the sending end has a damage buff, check to see if the incoming damage type matches the
+     * buff's type. If so, increase the damage by the buff's amount.
      *
-     * @param event         Event with information of the outgoing damage.
-     * @param entity        Entity that's dealing the damage.
-     * @param component     Stores information of all the entity's current damage buffs.
+     * @param event Event with information of the outgoing damage.
+     * @param entity Entity that's dealing the damage.
+     * @param component Stores information of all the entity's current damage buffs.
      */
     @ReceiveEvent
     public void buffDamageOfType(BeforeDamagedEvent event, EntityRef entity, BuffDamageComponent component) {

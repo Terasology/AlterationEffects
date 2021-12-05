@@ -14,7 +14,7 @@ import org.terasology.module.health.events.BeforeDamagedEvent;
 /**
  * This authority system manages all the water breathing effects currently in-effect across all entities.
  */
-@RegisterSystem(value = RegisterMode.AUTHORITY)
+@RegisterSystem(RegisterMode.AUTHORITY)
 public class WaterBreathingAuthoritySystem extends BaseComponentSystem {
     /**
      * Cancel any potential oncoming water or drowning damage when the water breathing effect is currently in-effect.
