@@ -5,8 +5,6 @@ package org.terasology.alterationEffects.resist;
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.OnEffectRemoveEvent;
 import org.terasology.engine.context.Context;
-import org.terasology.engine.core.Time;
-import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;

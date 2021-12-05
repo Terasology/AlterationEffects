@@ -126,7 +126,8 @@ public class OnEffectModifyEvent implements ConsumableEvent {
      * @param alterationEffect The original alteration effect that created this effect.
      * @param id The optional ID of this effect. Only used for effects that support sub-types (like DOT for example).
      */
-    public OnEffectModifyEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration, AlterationEffect alterationEffect, String id) {
+    public OnEffectModifyEvent(EntityRef instigator, EntityRef entity, float baseMagnitude, long baseDuration,
+                               AlterationEffect alterationEffect, String id) {
         this.instigator = instigator;
         this.entity = entity;
         this.baseMagnitude = baseMagnitude;
