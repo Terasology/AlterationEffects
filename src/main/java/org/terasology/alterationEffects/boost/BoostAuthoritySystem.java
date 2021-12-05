@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.boost;
 
 import org.terasology.engine.core.Time;
@@ -39,16 +26,16 @@ public class BoostAuthoritySystem extends BaseComponentSystem {
     /**
      * This will remove the health boost from an entity just before its health boost component is removed.
      *
-     * @param event     Event that indicates that the HealthBoostComponent will be deactivated and removed.
-     * @param entity    Entity that has the health boost component.
-     * @param hBoost    The health boost component. Used as delimiter/filter as well as for its sole variable.
+     * @param event Event that indicates that the HealthBoostComponent will be deactivated and removed.
+     * @param entity Entity that has the health boost component.
+     * @param hBoost The health boost component. Used as delimiter/filter as well as for its sole variable.
      */
     @ReceiveEvent
     public void removeHealthBoost(BeforeDeactivateComponent event, EntityRef entity, HealthBoostComponent hBoost) {
         HealthComponent h = entity.getComponent(HealthComponent.class);
 
         // Reverse the max health boosting effect by dividing the old boost amount.
-        h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f*hBoost.boostAmount));
+        h.maxHealth = Math.round(h.maxHealth / (1f + 0.01f * hBoost.boostAmount));
 
         // If the current health is greater than the new max health, set the current health value to be the max health.
         if (h.currentHealth > h.maxHealth) {

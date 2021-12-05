@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.alterationEffects.speed;
 
 import org.terasology.engine.entitySystem.entity.EntityRef;
@@ -31,25 +18,21 @@ import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 @RegisterSystem
 public class SpeedAlterationSystem extends BaseComponentSystem {
     /**
-     * When an entity tries to move in any direction, modify the speed based on what effects are being applied to the
-     * entity.
+     * When an entity tries to move in any direction, modify the speed based on what effects are being applied to the entity.
      *
-     * @param event         Stores information on what the max speed currently is and collects potential speed
-     *                      modifiers.
-     * @param entityRef     The entity trying to move.
+     * @param event Stores information on what the max speed currently is and collects potential speed modifiers.
+     * @param entityRef The entity trying to move.
      */
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef entityRef) {
         // If the entity's stunned, prevent it from moving.
         if (entityRef.hasComponent(StunComponent.class)) {
             event.multiply(0);
-        }
-        // If the entity is walking and they have a walk speed effect, boost their walking speed by the multiplier.
-        else if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
+        } else if (event.getMovementMode() == MovementMode.WALKING && entityRef.hasComponent(WalkSpeedComponent.class)) {
+            // If the entity is walking and they have a walk speed effect, boost their walking speed by the multiplier.
             event.multiply(entityRef.getComponent(WalkSpeedComponent.class).multiplier);
-        }
-        // If the entity is swimming and they have a swim speed effect, boost their swimming speed by the multiplier.
-        else if (event.getMovementMode() == MovementMode.SWIMMING && entityRef.hasComponent(SwimSpeedComponent.class)) {
+        } else if (event.getMovementMode() == MovementMode.SWIMMING && entityRef.hasComponent(SwimSpeedComponent.class)) {
+            // If the entity is swimming and they have a swim speed effect, boost their swimming speed by the multiplier.
             event.multiply(entityRef.getComponent(SwimSpeedComponent.class).multiplier);
         }
 
@@ -62,18 +45,17 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     /**
      * When an entity tries to jump, modify the jump speed based on what effects are being applied to the entity.
      *
-     * @param event         Stores information on the jump force and allows other systems to modify it.
-     * @param entityRef     The entity trying to jump.
+     * @param event Stores information on the jump force and allows other systems to modify it.
+     * @param entityRef The entity trying to jump.
      */
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef entityRef) {
         // If the entity's stunned, prevent it from moving.
         if (entityRef.hasComponent(StunComponent.class)) {
             event.multiply(0);
-        }
-        // If the entity is beginning to jump and they have a jump speed effect, boost their jumping speed by the
-        // multiplier.
-        else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
+        } else if (entityRef.hasComponent(JumpSpeedComponent.class)) {
+            // If the entity is beginning to jump and they have a jump speed effect, boost their jumping speed by the
+            // multiplier.
             event.multiply(entityRef.getComponent(JumpSpeedComponent.class).multiplier);
         }
 
@@ -84,11 +66,11 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     }
 
     /**
-     * When an entity tries to jump, modify the max number jumps (before hitting the ground) based on what effects are
-     * being applied to the entity.
+     * When an entity tries to jump, modify the max number jumps (before hitting the ground) based on what effects are being applied to the
+     * entity.
      *
-     * @param event         Stores information on the number of jumps and allows other systems to modify it.
-     * @param entityRef     The entity trying to jump.
+     * @param event Stores information on the number of jumps and allows other systems to modify it.
+     * @param entityRef The entity trying to jump.
      */
     @ReceiveEvent
     public void modifyMultiJump(AffectMultiJumpEvent event, EntityRef entityRef) {
@@ -99,11 +81,10 @@ public class SpeedAlterationSystem extends BaseComponentSystem {
     }
 
     /**
-     * When an entity tries to use an item, modify the cooldown time based on what effects are being applied to the
-     * entity.
+     * When an entity tries to use an item, modify the cooldown time based on what effects are being applied to the entity.
      *
-     * @param event         Stores information on the item's cooldown and allows other systems to modify it.
-     * @param entityRef     The entity trying to use an item.
+     * @param event Stores information on the item's cooldown and allows other systems to modify it.
+     * @param entityRef The entity trying to use an item.
      */
     @ReceiveEvent
     public void modifyItemUseSpeed(AffectItemUseCooldownTimeEvent event, EntityRef entityRef) {

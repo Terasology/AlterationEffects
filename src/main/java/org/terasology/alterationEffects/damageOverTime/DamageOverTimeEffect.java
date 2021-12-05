@@ -9,13 +9,19 @@ import org.terasology.reflection.MappedContainer;
  */
 @MappedContainer
 public class DamageOverTimeEffect {
-    /** The type of damage that will be inflicted. */
+    /**
+     * The type of damage that will be inflicted.
+     */
     public String damageType;
 
-    /** The amount of damage that will be inflicted upon on the entity per tick. */
+    /**
+     * The amount of damage that will be inflicted upon on the entity per tick.
+     */
     public int damageAmount;
 
-    /** The last time this effect dealt damage. */
+    /**
+     * The last time this effect dealt damage.
+     */
     public long lastDamageTime;
 
     public DamageOverTimeEffect copy() {

@@ -13,13 +13,16 @@ import java.util.Map;
  * This component is used for storing the health regeneration values an entity with the regeneration effect applied has.
  */
 public class RegenerationComponent implements Component<RegenerationComponent> {
-    /** The amount of healing that will be applied to the entity per tick. */
+    /**
+     * The amount of healing that will be applied to the entity per tick.
+     */
     public int regenerationAmount;
 
-    /** The last time this entity regenerated health via the regen effect. */
+    /**
+     * The last time this entity regenerated health via the regen effect.
+     */
     public long lastRegenerationTime;
 
-    /**  */
     public Map<Name, Integer> activeRegenerations = new HashMap<>();
 
     @Override
